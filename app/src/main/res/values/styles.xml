@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="StreamUiChannelListAvatarStyle" parent="StreamUiBaseAvatarStyle">
+        <item name="android:layout_width">@dimen/stream_ui_avatar_size_medium</item>
+        <item name="android:layout_height">@dimen/stream_ui_avatar_size_medium</item>
+        <item name="streamUiAvatarTextSize">@dimen/stream_ui_avatar_text_size_medium</item>
+        <item name="streamUiAvatarOnlineIndicatorEnabled">true</item>
+    </style>
+
+    <style name="StreamUiUserAvatarStyle" parent="StreamUiBaseAvatarStyle">
+        <item name="android:layout_width">@dimen/stream_ui_avatar_size_medium</item>
+        <item name="android:layout_height">@dimen/stream_ui_avatar_size_medium</item>
+        <item name="streamUiAvatarTextSize">@dimen/stream_ui_avatar_text_size_medium</item>
+        <item name="streamUiAvatarOnlineIndicatorEnabled">false</item>
+    </style>
+</resources>

@@ -1,0 +1,75 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+}
+
+android {
+    namespace 'com.brins.lib_base'
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 24
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        debug {
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', 'API_KEY', '"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"'
+            buildConfigField 'String', 'CHAT_API_KEY', '"ad3mfx39mkfd"'
+
+        }
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', 'API_KEY', '""'
+            buildConfigField 'String', 'CHAT_API_KEY', '"ad3mfx39mkfd"'
+
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding true
+        buildConfig = true
+    }
+}
+
+dependencies {
+
+    api (name: 'stream-chat-android-markdown-transformer-release', ext: 'aar')
+
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.10.0'
+
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    api "com.squareup.moshi:moshi-kotlin:$moshi_version"
+//    api "org.jetbrains.kotlin:kotlin-reflect"
+
+    api "io.getstream:stream-chat-android-client:$stream_version"
+    api "io.getstream:stream-chat-android-state:$stream_version"
+    api "io.getstream:stream-chat-android-offline:$stream_version"
+    api "io.getstream:stream-chat-android-ui-components:$stream_version"
+    api "io.getstream:stream-log:1.1.4"
+    api "io.noties.markwon:core:$markdown_version"
+    api "io.noties.markwon:linkify:$markdown_version"
+    api "io.noties.markwon:ext-strikethrough:$markdown_version"
+    api "io.noties.markwon:image:$markdown_version"
+
+    api "com.google.code.gson:gson:$gson_version"
+
+    implementation "com.tencent:mmkv:$mmkv_version"
+}

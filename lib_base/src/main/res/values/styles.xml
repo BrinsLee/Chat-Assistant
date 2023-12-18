@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Ui.ChannelListHeader" parent="StreamUi">
+        <item name="UiOfflineTitleTextSize">@dimen/stream_ui_text_large</item>
+        <item name="UiOfflineTitleTextColor">@color/stream_ui_text_color_primary</item>
+        <item name="UiOfflineTitleTextStyle">bold</item>
+        <item name="UiShowOfflineProgressBar">true</item>
+        <item name="UiOfflineProgressBarTint">@color/color_178CE9</item>
+        <item name="UiActionBackgroundTint">@color/stream_ui_icon_button_background_selector</item>
+        <item name="streamUiMessageListHeaderSeparatorBackgroundDrawable">@drawable/stream_ui_divider</item>
+    </style>
+
+</resources>

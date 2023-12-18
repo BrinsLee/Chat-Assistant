@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 搜索菜单项 -->
+    <item
+        android:id="@+id/action_search"
+        android:title="@string/search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="ifRoom"/>
+
+    <!-- 更多菜单项 -->
+    <item
+        android:id="@+id/action_more"
+        android:title="@string/more"
+        android:icon="@drawable/ic_more"
+        app:showAsAction="ifRoom">
+        <!-- 折叠菜单的子项 -->
+        <menu>
+            <item
+                android:id="@+id/action_subitem1"
+                android:title="Sub Item 1" />
+            <item
+                android:id="@+id/action_subitem2"
+                android:title="Sub Item 2" />
+        </menu>
+    </item>
+</menu>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gpt</string>
+    <string name="search">搜索</string>
+    <string name="more">更多</string>
+    <string name="color_scheme">颜色主题</string>
+    <string name="language_change">语言</string>
+    <string name="sign_out">退出</string>
+
+</resources>

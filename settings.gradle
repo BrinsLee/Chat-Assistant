@@ -1,0 +1,27 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+        flatDir {
+            dirs 'libs'
+        }
+        maven { url "https://jitpack.io" }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        flatDir {
+            dirs 'libs'
+        }
+        maven { url "https://jitpack.io" }
+    }
+}
+
+rootProject.name = "Gpt"
+include ':app'
+include ':lib_network'
+include ':lib_base'

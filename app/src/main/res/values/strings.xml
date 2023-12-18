@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Gpt</string>
+    <string name="search">Search</string>
+    <string name="more">More</string>
+    <string name="color_scheme">Color Scheme</string>
+    <string name="language_change">Language</string>
+    <string name="sign_out">Sign Out</string>
+
+</resources>
