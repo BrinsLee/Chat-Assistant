@@ -10,18 +10,18 @@
 
     <!-- 更多菜单项 -->
     <item
-        android:id="@+id/action_more"
+        android:id="@+id/action_add"
         android:title="@string/more"
-        android:icon="@drawable/ic_more"
+        android:icon="@drawable/ic_add_new_chat"
         app:showAsAction="ifRoom">
         <!-- 折叠菜单的子项 -->
         <menu>
             <item
-                android:id="@+id/action_subitem1"
-                android:title="Sub Item 1" />
+                android:id="@+id/action_gpt_3_5"
+                android:title="GPT-3.5" />
             <item
-                android:id="@+id/action_subitem2"
-                android:title="Sub Item 2" />
+                android:id="@+id/action_gpt_4"
+                android:title="GPT-4" />
         </menu>
     </item>
 </menu>

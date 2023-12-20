@@ -14,7 +14,7 @@ interface IChatGPTService {
     "accept: text/event-stream",
     "accept-encoding: gzip, deflate, br",
     "accept-language: en-GB,en-US;q=0.9,en;q=0.8",
-    "content-type: application/json",
+    "Content-type: application/json",
   )
   @POST("backend-api/conversation")
   suspend fun sendMessage(@Body body: GPTChatRequest): Response<GPTChatResponse>

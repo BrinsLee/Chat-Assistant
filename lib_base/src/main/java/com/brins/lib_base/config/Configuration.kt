@@ -10,13 +10,18 @@ import com.brins.lib_base.model.user.ChatUser
  */
 const val API_KEY = BuildConfig.API_KEY
 
+const val CHANNEL_NAME_PREFIX = "GPT-"
+
 /**
  * 模型相关
  */
-const val MODEL_3_5 = "gpt-3.5-turbo"
+// Up to Sep 2021
+const val MODEL_3_5_TURBO = "gpt-3.5-turbo"
 
-const val MODEL_DAVINCI = "text-davinci-002-render"
+const val MODEL_3_5_TURBO_1106 = "gpt-3.5-turbo-1106"
 
+// Up to Apr 2023
+const val MODEL_4_1106_PREVIEW = "gpt-4-1106-preview"
 
 /**
  * 请求头参数

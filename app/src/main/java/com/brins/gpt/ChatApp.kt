@@ -5,6 +5,7 @@ import com.brins.lib_base.BuildConfig
 import com.brins.lib_base.config.EXTRA_KEY_USER_DATA
 import com.brins.lib_base.extensions.fromJson
 import com.brins.lib_base.extensions.toJson
+import com.brins.lib_base.utils.ChatDateFormatter
 import com.brins.lib_base.utils.CustomChatClientDebugger
 import com.brins.lib_base.utils.MMKVUtils
 import dagger.hilt.android.HiltAndroidApp
@@ -15,9 +16,13 @@ import io.getstream.chat.android.models.ConnectionData
 import io.getstream.chat.android.models.UploadAttachmentsNetworkType
 import io.getstream.chat.android.models.User
 import io.getstream.chat.android.offline.plugin.factory.StreamOfflinePluginFactory
+import io.getstream.chat.android.state.plugin.config.StatePluginConfig
+import io.getstream.chat.android.state.plugin.factory.StreamStatePluginFactory
 import io.getstream.chat.android.ui.ChatUI
+import io.getstream.chat.android.ui.common.helper.DateFormatter
 import io.getstream.log.streamLog
 import io.getstream.result.call.Call
+import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.random.Random
@@ -32,8 +37,16 @@ class ChatApp: Application() {
 
     @Inject
     lateinit var customChatClientDebugger: CustomChatClientDebugger
+
+    companion object {
+        @JvmStatic
+        lateinit var dateDefaultFormat: ChatDateFormatter
+            private set
+    }
+
     override fun onCreate() {
         super.onCreate()
+        dateDefaultFormat = ChatDateFormatter()
         initMMKV()
         initStreamChat()
     }
@@ -47,9 +60,16 @@ class ChatApp: Application() {
         val offlinePluginFactory = StreamOfflinePluginFactory(
             appContext = this
         )
+        val statePluginFactory = StreamStatePluginFactory(
+            config = StatePluginConfig(
+                backgroundSyncEnabled = true,
+                userPresence = true,
+            ),
+            appContext = this,
+        )
         val chatClient = ChatClient.Builder(BuildConfig.CHAT_API_KEY, this)
             .logLevel(logLevel)
-            .withPlugins(offlinePluginFactory)
+            .withPlugins(offlinePluginFactory, statePluginFactory)
             .uploadAttachmentsNetworkType(UploadAttachmentsNetworkType.NOT_ROAMING)
             .apply {
                 if (BuildConfig.DEBUG) {

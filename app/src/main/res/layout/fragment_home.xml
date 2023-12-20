@@ -19,7 +19,7 @@
             tools:layout_height="@dimen/spacing_50dp"
             />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <io.getstream.chat.android.ui.feature.channels.list.ChannelListView
             android:id="@+id/channel_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

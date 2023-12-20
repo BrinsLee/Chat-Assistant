@@ -4,19 +4,17 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.use
 import androidx.core.view.isVisible
 import com.brins.lib_base.R
 import com.brins.lib_base.databinding.LayoutChannelListHeaderBinding
 import com.brins.lib_base.extensions.ThemeInflater
 import com.brins.lib_base.extensions.setTextStyle
-import io.getstream.chat.android.ui.font.TextStyle
-import androidx.core.content.res.use
 import io.getstream.chat.android.models.User
+import io.getstream.chat.android.ui.font.TextStyle
 
 class ChannelListHeaderView @JvmOverloads constructor(
     context: Context, attr: AttributeSet? = null, def: Int = 0
@@ -119,6 +117,10 @@ class ChannelListHeaderView @JvmOverloads constructor(
 
     fun setUser(user: User) {
         binding.userAvatarView.setUser(user)
+    }
+
+    fun showOnlineTitle() {
+        binding.offlineTitleContainer.isVisible = false
     }
 
     fun showOfflineTitle() {

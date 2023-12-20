@@ -9,5 +9,18 @@
         android:id="@+id/homeFragment"
         android:name="com.brins.gpt.fragment.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_chatMessageFragment"
+            app:destination="@id/chatMessageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatMessageFragment"
+        android:name="com.brins.gpt.fragment.ChatMessageFragment"
+        android:label="fragment_chat_message"
+        tools:layout="@layout/fragment_chat_message" >
+        <argument
+            android:name="extra_channelId"
+            app:argType="string" />
+    </fragment>
 </navigation>
