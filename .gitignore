@@ -15,5 +15,5 @@
 .cxx
 local.properties
 /app/release
-/libs/
+libs/
 /app/key.keystore.jks
