@@ -25,3 +25,25 @@ rootProject.name = "Gpt"
 include ':app'
 include ':lib_network'
 include ':lib_base'
+
+/*
+include ':stream-chat-android-ui-components'
+project(':stream-chat-android-ui-components').projectDir = new File('D:/workspace/stream-chat-android/stream-chat-android-ui-components')
+
+include ':stream-chat-android-client'
+project(':stream-chat-android-client').projectDir = new File('D:/workspace/stream-chat-android/stream-chat-android-client')
+
+include ':stream-chat-android-core'
+project(':stream-chat-android-core').projectDir = new File('D:/workspace/stream-chat-android/stream-chat-android-core')
+
+include ':stream-chat-android-offline'
+project(':stream-chat-android-offline').projectDir = new File('D:/workspace/stream-chat-android/stream-chat-android-offline')
+
+include ':stream-chat-android-state'
+project(':stream-chat-android-state').projectDir = new File('D:/workspace/stream-chat-android/stream-chat-android-state')
+
+include ':stream-chat-android-ui-common'
+project(':stream-chat-android-ui-common').projectDir = new File('D:/workspace/stream-chat-android/stream-chat-android-ui-common')
+
+include ':stream-chat-android-ui-utils'
+project(':stream-chat-android-ui-utils').projectDir = new File('D:/workspace/stream-chat-android/stream-chat-android-ui-utils')*/

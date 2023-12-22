@@ -103,4 +103,74 @@
     <init>(...);
 }
 
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+-keepattributes AnnotationDefault
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn javax.annotation.**
+-dontwarn retrofit2.KotlinExtensions
+-dontwarn retrofit2.KotlinExtensions$*
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation interface <1>
+
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
 -keep,allowobfuscation,allowshrinking class retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-if interface * { @retrofit2.http.* public *** *(...); }
+-keep,allowoptimization,allowshrinking,allowobfuscation class <3>
+
+## Stream Chat Android Client Proguard Rules
+
+# Classes that are using with QuerySort can't be minified, because QuerySort uses reflection. If the
+# name of the fields of the classes being used by QuerySort, change, the sort won't work as expected.
+-keep class io.getstream.chat.android.models.** { *; }
+-keep class io.getstream.chat.android.client.api2.model.** { *; }
+
+# ExtraDataDto can't be minified because we check for extraData using reflection in
+# io.getstream.chat.android.client.parser2.adapters.CustomObjectDtoAdapter. If the name of extraData
+# is changed, we will have problem with serialization.
+-keep class * extends io.getstream.chat.android.client.api2.model.dto.ExtraDataDto {
+    public kotlin.collections.Map extraData;
+ }
+
+# Rules necessary for R8 full mode
+-keep class io.getstream.chat.android.client.api2.endpoint.** { *; }
+-keep class io.getstream.chat.android.client.call.RetrofitCall { *; }
+-keep class com.squareup.moshi.JsonReader
+-keep class com.squareup.moshi.JsonAdapter
+-keep class kotlin.reflect.jvm.internal.* { *; }
+
+# Rules to improve the logs by keeping the names of the classes
+-keep class * extends io.getstream.chat.android.client.clientstate.UserState
+
+# Classes that are used by reflection.
+-keep class io.getstream.chat.android.client.notifications.ChatPushDelegate { *; }
+## Stream Chat Android UI Common Proguard Rules
+
+# Classes that are used by reflection.
+-keep class io.getstream.chat.android.ui.common.notifications.StreamCoilUserIconBuilder { *; }
+-keep class io.getstream.android.push.permissions.snackbar.SnackbarNotificationPermissionHandler { *; }
+
+
+# When editing this file, update the following files as well:
+# - META-INF/com.android.tools/proguard/coroutines.pro
+# - META-INF/com.android.tools/r8/coroutines.pro
+
+# ServiceLoader support
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+
+# Most of volatile fields are updated with AFU and should not be mangled
+-keepclassmembers class kotlinx.coroutines.** {
+    volatile <fields>;
+}
+
+# Same story for the standard library's SafeContinuation that also uses AtomicReferenceFieldUpdater
+-keepclassmembers class kotlin.coroutines.SafeContinuation {
+    volatile <fields>;
+}
+

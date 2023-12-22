@@ -11,7 +11,7 @@ import com.brins.lib_base.utils.ATHUtil
 import io.getstream.chat.android.ui.R
 
 
-fun Context.surfaceColor() = resolveColor(com.google.android.material.R.attr.colorSurface, Color.WHITE)
+fun Context.surfaceColor() = resolveColor(com.google.android.material.R.attr.colorSurface, getColor(com.brins.lib_base.R.color.white))
 
 fun Context.resolveColor(@AttrRes attr: Int, fallBackColor: Int = 0) =
     ATHUtil.resolveColor(this, attr, fallBackColor)

@@ -3,6 +3,7 @@ package com.brins.lib_base.config
 import com.brins.lib_base.BuildConfig
 import com.brins.lib_base.BuildConfig.CHAT_API_KEY
 import com.brins.lib_base.model.user.ChatUser
+import io.getstream.chat.android.models.User
 
 
 /**
@@ -35,15 +36,15 @@ const val Authorization = "Authorization"
 const val DEFAULT_AVATAR = "https://getstream.io/random_png?id=none&name=none&size=200"
 
 /**
- * 测试用户
+ * 测试用户 40b5202b-4a05-4351-93db-5dabc7487205 40b5202b-4a05-4351-93db-5dabc7487205
  */
-val USER9014: ChatUser = ChatUser(CHAT_API_KEY,
-    "40b5202b-4a05-4351-93db-5dabc7487205",
-    "User 9014",
-        token = "",
-        DEFAULT_AVATAR
-    )
 
+val chatGPTUser = User(
+    id = "40b5202b-4a05-4351-93db-5dabc7487205",
+    role = "user",
+    name = "User 9014",
+    image = DEFAULT_AVATAR
+)
 
 /**
  * ==================mmkv===================

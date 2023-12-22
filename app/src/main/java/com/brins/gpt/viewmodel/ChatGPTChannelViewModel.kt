@@ -1,5 +1,7 @@
 package com.brins.gpt.viewmodel
 
+import android.app.AlertDialog
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -7,8 +9,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
+import com.brins.gpt.R
 import com.brins.gpt.extensions.addFlow
 import com.brins.gpt.extensions.combineWith
+import com.brins.gpt.extensions.enqueue
 import com.brins.gpt.repository.GPTChannelRepositoryImpl
 import com.brins.lib_base.config.MODEL_3_5_TURBO_1106
 import com.brins.lib_base.config.MODEL_4_1106_PREVIEW
@@ -81,6 +85,9 @@ class ChatGPTChannelViewModel(
 
     }
 
+    /**
+     * 初始化数据
+     */
     private fun initData(filterObject: FilterObject) {
         stateMerger.value = INITIAL_STATE
         val queryChannelsRequest = QueryChannelsRequest(
@@ -131,6 +138,8 @@ class ChatGPTChannelViewModel(
 
     companion object {
 
+        const val TAG = "ChatGPTChannelViewModel"
+
         @JvmField
         val DEFAULT_SORT: QuerySorter<Channel> = QuerySortByField.descByName("last_updated")
 
@@ -143,10 +152,16 @@ class ChatGPTChannelViewModel(
     }
 
 
+    /**
+     * 创建默认Channel过滤条件
+     */
     private fun buildDefaultFilter(): Flow<FilterObject> {
         return gptChannelRepositoryImpl.buildDefaultFilter()
     }
 
+    /**
+     * 根据channelStateData，封装返回ChannelState
+     */
     private fun handleChannelStateNews(
         channelState: ChannelsStateData,
     ): ChannelState {
@@ -166,6 +181,9 @@ class ChatGPTChannelViewModel(
         }
     }
 
+    /**
+     * 绑定数据与UI
+     */
     fun bindView(view: ChannelListView, lifecycleOwner: LifecycleOwner) {
         channelState.combineWith(paginationState) { channelState, paginationState ->
             paginationState?.let {
@@ -199,12 +217,48 @@ class ChatGPTChannelViewModel(
         ) {
 //            view.showError(it)
         }
+
+        view.setChannelDeleteClickListener {
+            AlertDialog.Builder(view.context)
+                .setTitle(R.string.channel_list_delete_confirmation_title)
+                .setMessage(R.string.channel_list_delete_confirmation_message)
+                .setPositiveButton(R.string.channel_list_delete_confirmation_positive_button) { dialog, _ ->
+                    dialog.dismiss()
+                    deleteChannel(it)
+                }
+                .setNegativeButton(R.string.channel_list_delete_confirmation_negative_button) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
     }
 
+    /**
+     * 删除会话
+     */
+    private fun deleteChannel(channel: Channel) {
+        gptChannelRepositoryImpl.deleteChannel(channel).enqueue(
+            onError = { error ->
+                Log.e(TAG, "Could not delete channel with id: ${channel.id}. " +
+                        "Error: ${error.message}.")
+                _errorEvents.postValue(
+                    ErrorEvent.DeleteChannelError(error)
+                )
+            }
+        )
+    }
+
+    /**
+     * 处理用户触发事件，目前包含创建会话
+     */
     fun handleEvents(gptChannelEvent: GPTChannelEvent) {
         createRandomChannel(gptChannelEvent.model)
     }
 
+    /**
+     * 创建会话
+     * @param model GPT模型
+     */
     private fun createRandomChannel(model: String = MODEL_3_5_TURBO_1106) {
         viewModelScope.launch {
             channelsMutableUiState.value = CreateChannelState.Loading
@@ -219,6 +273,9 @@ class ChatGPTChannelViewModel(
         }
     }
 
+    /**
+     * 处理分页状态
+     */
     private fun setPaginationState(reducer: PaginationState.() -> PaginationState) {
         paginationStateMerger.value = reducer(paginationStateMerger.value ?: PaginationState())
     }

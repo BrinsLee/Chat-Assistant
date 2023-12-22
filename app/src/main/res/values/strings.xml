@@ -5,7 +5,10 @@
     <string name="color_scheme">Color Scheme</string>
     <string name="language_change">Language</string>
     <string name="sign_out">Sign Out</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="message">Message</string>
+    <string name="toast_hello">Hi, I\\\'m OpenAI\\\'s ChatGPT with Stream SDK. Ask me anything!</string>
+    <string name="channel_list_delete_confirmation_title">Delete Channel</string>
+    <string name="channel_list_delete_confirmation_message">Are you sure you want to permanently delete this conversation?</string>
+    <string name="channel_list_delete_confirmation_positive_button">Delete</string>
+    <string name="channel_list_delete_confirmation_negative_button">Cancel</string>
 </resources>

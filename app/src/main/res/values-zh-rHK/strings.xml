@@ -6,5 +6,11 @@
     <string name="color_scheme">顔色主題</string>
     <string name="language_change">語言</string>
     <string name="sign_out">退出</string>
+    <string name="message">Message</string>
+    <string name="toast_hello">你好，我是ChatGPT，有什麽可以幫助你的呢？</string>
+    <string name="channel_list_delete_confirmation_title">刪除會話</string>
+    <string name="channel_list_delete_confirmation_message">您確定要永久刪除此會話嗎?</string>
+    <string name="channel_list_delete_confirmation_positive_button">刪除</string>
+    <string name="channel_list_delete_confirmation_negative_button">取消</string>
 
 </resources>

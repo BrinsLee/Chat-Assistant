@@ -5,9 +5,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -36,7 +38,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private val channelListHeaderViewModel: ChannelListHeaderViewModel by viewModels()
 
-    private val mViewModel: ChatGPTMessageViewModel by viewModels()
 
     private val mUserInfoViewModel: ChatGPTUserInfoViewModel by viewModels()
 
@@ -189,7 +190,9 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     private fun setUpChannelViews() {
         with(mBinding.channelList) {
             mChannelViewModel.bindView(this, viewLifecycleOwner)
-
+            setChannelItemClickListener {
+                navigateTo(R.id.chatMessageFragment, bundleOf(ChatMessageFragment.EXTRA_CHANNEL_ID to it.cid))
+            }
         }
         /*with(mBinding.channelList) {
             adapter = mChannelAdapter

@@ -21,4 +21,6 @@ interface IGPTChannelRepository {
         chatEventHandlerFactory: ChatEventHandlerFactory,
         viewModelScope: CoroutineScope
     ): StateFlow<QueryChannelsState?>
+
+    fun deleteChannel(channel: Channel): Call<Channel>
 }

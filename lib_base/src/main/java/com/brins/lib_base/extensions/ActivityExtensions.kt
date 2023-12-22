@@ -77,7 +77,7 @@ fun AppCompatActivity.setImmersiveFullscreen() {
 fun AppCompatActivity.setDrawBehindSystemBars() {
     setNavigationBarColorPreOreo(surfaceColor())
     if (VersionUtils.hasMarshmallow()) {
-        setStatusBarColor(Color.TRANSPARENT)
+        setStatusBarColor(getColor(R.color.white))
     } else {
         setStatusBarColor(Color.BLACK)
     }

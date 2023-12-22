@@ -5,6 +5,7 @@ import com.brins.lib_base.config.CHANNEL_NAME_PREFIX
 import com.brins.lib_base.config.MODEL_3_5_TURBO
 import com.brins.lib_base.config.MODEL_3_5_TURBO_1106
 import com.brins.lib_base.config.MODEL_4_1106_PREVIEW
+import com.brins.lib_base.config.chatGPTUser
 import com.brins.lib_base.extensions.defaultChannelListFilter
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.api.models.QueryChannelsRequest
@@ -34,7 +35,7 @@ class GPTChannelRepositoryImpl @Inject constructor(private val chatClient: ChatC
         return chatClient.createChannel(
             channelType = "messaging",
             channelId = UUID.randomUUID().toString(),
-            memberIds = listOf(userId),
+            memberIds = listOf(userId, chatGPTUser.id),
             extraData = mapOf("name" to generateChannelName(model))
         )
     }
@@ -64,5 +65,9 @@ class GPTChannelRepositoryImpl @Inject constructor(private val chatClient: ChatC
         builder.append(" ")
         builder.append(date)
         return builder.toString()
+    }
+
+    override fun deleteChannel(channel: Channel): Call<Channel> {
+        return chatClient.channel(channel.cid).delete()
     }
 }
