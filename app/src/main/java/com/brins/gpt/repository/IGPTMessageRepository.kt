@@ -9,11 +9,16 @@ import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 interface IGPTMessageRepository {
-    suspend fun sendMessage(gptChatRequest: GPTChatRequest): Response<GPTChatResponse>
+    suspend fun sendMessage(gptChatRequest: GPTChatRequest): GPTChatResponse?
 
-    suspend fun createCompletion(gptChatRequest: GPTChatRequest): Response<GPTChatResponse>
+    suspend fun createCompletion(gptChatRequest: GPTChatRequest): GPTChatResponse?
 
     suspend fun watchIsChannelMessageEmpty(cid: String): Call<Channel>
 
-    suspend fun sendStreamMessage(cid: String, text: String): Call<Message>
+    suspend fun sendStreamMessage(cid: String, text: String, isFromMine: Boolean): Call<Message>
+
+    suspend fun sendStreamMessage(message: Message): Call<Message>
+
+    suspend fun sendStreamMessage(message: Message, isFromMine: Boolean): Call<Message>
+
 }

@@ -1,4 +1,4 @@
-package com.brins.lib_base.utils
+package com.brins.lib_base.utils.formatter
 
 import io.getstream.chat.android.ui.common.helper.DateFormatter
 import java.text.DateFormat

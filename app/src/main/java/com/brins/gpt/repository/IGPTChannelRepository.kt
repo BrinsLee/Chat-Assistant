@@ -22,5 +22,7 @@ interface IGPTChannelRepository {
         viewModelScope: CoroutineScope
     ): StateFlow<QueryChannelsState?>
 
+    fun queryChannel(queryChannelsRequest: QueryChannelsRequest): Call<List<Channel>>
+
     fun deleteChannel(channel: Channel): Call<Channel>
 }

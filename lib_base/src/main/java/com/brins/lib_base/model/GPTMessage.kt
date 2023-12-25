@@ -16,12 +16,13 @@
 
 package com.brins.lib_base.model
 
+import com.brins.lib_base.config.ROLE_USER
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class GPTMessage(
-  @field:Json(name = "id") val id: String,
-  @field:Json(name = "role") val role: String = "user",
-  @field:Json(name = "content") val content: GPTContent = GPTContent()
+//  @field:Json(name = "mid") val mid: String,
+  @field:Json(name = "role") val role: String = ROLE_USER,
+  @field:Json(name = "content") val content: String = ""
 )

@@ -11,4 +11,7 @@
     <string name="channel_list_delete_confirmation_message">Are you sure you want to permanently delete this conversation?</string>
     <string name="channel_list_delete_confirmation_positive_button">Delete</string>
     <string name="channel_list_delete_confirmation_negative_button">Cancel</string>
+<!--    error-->
+    <string name="error_network_failure">Network connection failed, please try again later</string>
+
 </resources>

@@ -1,9 +1,21 @@
 package com.brins.lib_base.config
 
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import com.brins.lib_base.BuildConfig
 import com.brins.lib_base.BuildConfig.CHAT_API_KEY
+import com.brins.lib_base.extensions.bold
+import com.brins.lib_base.extensions.getSenderDisplayNames
+import com.brins.lib_base.extensions.isFromChatGPT
 import com.brins.lib_base.model.user.ChatUser
+import io.getstream.chat.android.client.utils.message.isSystem
+import io.getstream.chat.android.models.Channel
+import io.getstream.chat.android.models.Message
 import io.getstream.chat.android.models.User
+import io.getstream.chat.android.ui.ChatUI
+import io.getstream.chat.android.ui.common.utils.extensions.isDirectMessaging
+import io.getstream.chat.android.ui.helper.MessagePreviewFormatter
+
 
 
 /**
@@ -12,6 +24,17 @@ import io.getstream.chat.android.models.User
 const val API_KEY = BuildConfig.API_KEY
 
 const val CHANNEL_NAME_PREFIX = "GPT-"
+
+const val GPT_MESSAGE_KEY = "ChatGpt"
+
+/**
+ * GPT Role
+ */
+const val ROLE_SYSTEM = "system"
+
+const val ROLE_USER = "user"
+
+const val ROLE_ASSISTANT = "assistant"
 
 /**
  * 模型相关
@@ -51,4 +74,7 @@ val chatGPTUser = User(
  *
  */
 const val EXTRA_KEY_USER_DATA: String = "extra_key_user_data" //用户数据
+
+
+
 

@@ -28,7 +28,6 @@ import io.getstream.chat.android.ui.feature.channels.list.ChannelListView
 import io.getstream.chat.android.ui.feature.channels.list.adapter.ChannelListItem
 import io.getstream.chat.android.ui.viewmodel.channels.ChannelListViewModel
 import io.getstream.result.Error
-import io.getstream.result.Result
 import io.getstream.result.onSuccessSuspend
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -42,7 +41,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 
-class ChatGPTChannelViewModel(
+class ChatGPTChannelStateViewModel(
     private var filter: FilterObject? = null,
     private var sort: QuerySorter<Channel> = ChannelListViewModel.DEFAULT_SORT,
     private var limit: Int = DEFAULT_CHANNEL_LIMIT,
@@ -68,13 +67,13 @@ class ChatGPTChannelViewModel(
 
     private val filterLiveData: MutableLiveData<FilterObject?> = MutableLiveData(filter)
 
-    private var queryChannelsLiveData: MutableLiveData<List<Channel>?> = MutableLiveData(null)
+    private var queryChannelsState: StateFlow<QueryChannelsState?> = MutableStateFlow(null)
 
     init {
         if (filter == null) {
             viewModelScope.launch {
                 filter = buildDefaultFilter().first()
-                this@ChatGPTChannelViewModel.filterLiveData.value = filter
+                this@ChatGPTChannelStateViewModel.filterLiveData.value = filter
             }
         }
 
@@ -98,31 +97,14 @@ class ChatGPTChannelViewModel(
             messageLimit = messageLimit,
             memberLimit = memberLimit,
         )
-        stateMerger.value = ChannelState(isLoading = true, emptyList())
 
-        gptChannelRepositoryImpl.queryChannel(
-            queryChannelsRequest
-        ).enqueue { result ->
-            when (result) {
-                is Result.Success -> {queryChannelsLiveData.value = result.value}
-                is Result.Failure -> {queryChannelsLiveData.value = emptyList()
-                }
-            }
-            /*paginationStateMerger.addFlow(
-                queryJob,
-                queryChannelsState.loadingMore
-            ) { loadingMore ->
-                setPaginationState { copy(loadingMore = loadingMore) }
-            }
-            paginationStateMerger.addFlow(
-                queryJob,
-                queryChannelsState.endOfChannels
-            ) { endOfChannels ->
-                setPaginationState { copy(endOfChannels = endOfChannels) }
-            }*/
-        }
+        queryChannelsState = gptChannelRepositoryImpl.queryChannelsAsState(
+            queryChannelsRequest,
+            ChatEventHandlerFactory(),
+            viewModelScope
+        )
 
-        /*queryJob?.cancel()
+        queryJob?.cancel()
         val queryJob = Job(viewModelScope.coroutineContext.job).also {
             this.queryJob = it
         }
@@ -131,9 +113,27 @@ class ChatGPTChannelViewModel(
                 if (!isActive) {
                     return@collectLatest
                 }
+                stateMerger.addFlow(
+                    queryJob,
+                    queryChannelsState.channelsStateData
+                ) { channelState ->
+                    stateMerger.value = handleChannelStateNews(channelState)
+                }
 
+                paginationStateMerger.addFlow(
+                    queryJob,
+                    queryChannelsState.loadingMore
+                ) { loadingMore ->
+                    setPaginationState { copy(loadingMore = loadingMore) }
+                }
+                paginationStateMerger.addFlow(
+                    queryJob,
+                    queryChannelsState.endOfChannels
+                ) { endOfChannels ->
+                    setPaginationState { copy(endOfChannels = endOfChannels) }
+                }
             }
-        }*/
+        }
     }
 
     companion object {
@@ -185,36 +185,7 @@ class ChatGPTChannelViewModel(
      * 绑定数据与UI
      */
     fun bindView(view: ChannelListView, lifecycleOwner: LifecycleOwner) {
-        channelState.combineWith(
-            queryChannelsLiveData
-        ) { channelState , list->
-            val channelStateData = if (list.isNullOrEmpty()) {
-                handleChannelStateNews(ChannelsStateData.OfflineNoResults)
-            } else {
-                handleChannelStateNews(ChannelsStateData.Result(list))
-            }
-            val list: List<ChannelListItem> = channelStateData.channels.map {
-                ChannelListItem.ChannelItem(it, emptyList())
-            }?: emptyList()
-            list to channelStateData.isLoading
-        }.distinctUntilChanged().observe(lifecycleOwner) { (list, isLoading) ->
-            when {
-                isLoading && list.isEmpty() -> {
-                    view.showLoadingView()
-                }
-
-                list.isNotEmpty() -> {
-                    view.hideLoadingView()
-                    view.setChannels(list)
-                }
-
-                else -> {
-                    view.hideLoadingView()
-                    view.setChannels(emptyList())
-                }
-            }
-        }
-        /*channelState.combineWith(paginationState) { channelState, paginationState ->
+        channelState.combineWith(paginationState) { channelState, paginationState ->
             paginationState?.let {
                 view.setPaginationEnabled(!it.endOfChannels && !it.loadingMore)
             }
@@ -228,19 +199,18 @@ class ChatGPTChannelViewModel(
             list to (channelState?.isLoading == true)
         }.distinctUntilChanged().observe(lifecycleOwner) { (list, isLoading) ->
             when {
-                isLoading && list.isEmpty() -> {
-                    view.showLoadingView()
-                }
+                isLoading && list.isEmpty() -> view.showLoadingView()
                 list.isNotEmpty() -> {
                     view.hideLoadingView()
                     view.setChannels(list)
                 }
+
                 else -> {
                     view.hideLoadingView()
                     view.setChannels(emptyList())
                 }
             }
-        }*/
+        }
 
         errorEvents.observe(
             lifecycleOwner,

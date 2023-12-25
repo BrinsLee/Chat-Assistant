@@ -1,6 +1,7 @@
 package com.brins.lib_base.utils
 
 import com.brins.lib_base.extensions.isChatGPT
+import com.brins.lib_base.extensions.isFromChatGPT
 import com.brins.lib_base.extensions.isSameMessage
 import io.getstream.chat.android.client.debugger.ChatClientDebugger
 import io.getstream.chat.android.client.debugger.SendMessageDebugger
@@ -59,7 +60,7 @@ class CustomSendMessageDebugger(
     override fun onInterceptionUpdate(message: Message) {
         logger.d { "[onInterceptionUpdate] #debug; message: $message" }
         mSendingMessage?.let {
-            if (it.user.isChatGPT() && it.isSameMessage(message)) {
+            if (it.isFromChatGPT() && it.isSameMessage(message)) {
                 tryModifyMessageUser(it, message)
             }
         }

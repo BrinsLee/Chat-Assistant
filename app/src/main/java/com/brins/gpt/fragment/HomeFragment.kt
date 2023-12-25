@@ -9,7 +9,6 @@ import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -18,7 +17,7 @@ import com.brins.gpt.adapter.ChannelAdapter
 import com.brins.gpt.databinding.FragmentHomeBinding
 import com.brins.gpt.di.GPTChannelViewModelFactory
 import com.brins.gpt.extensions.bindsView
-import com.brins.gpt.viewmodel.ChatGPTChannelViewModel
+import com.brins.gpt.viewmodel.ChatGPTChannelStateViewModel
 import com.brins.gpt.viewmodel.ChatGPTMessageViewModel
 import com.brins.gpt.viewmodel.ChatGPTUserInfoViewModel
 import com.brins.lib_base.base.BaseFragment
@@ -43,12 +42,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private val channelViewModelFactory: GPTChannelViewModelFactory = GPTChannelViewModelFactory(
         null, ChannelListViewModel.DEFAULT_SORT,
-        ChatGPTChannelViewModel.DEFAULT_CHANNEL_LIMIT,
-        ChatGPTChannelViewModel.DEFAULT_MESSAGE_LIMIT,
-        ChatGPTChannelViewModel.DEFAULT_MEMBER_LIMIT)
+        ChatGPTChannelStateViewModel.DEFAULT_CHANNEL_LIMIT,
+        ChatGPTChannelStateViewModel.DEFAULT_MESSAGE_LIMIT,
+        ChatGPTChannelStateViewModel.DEFAULT_MEMBER_LIMIT)
 
 
-    private val mChannelViewModel: ChatGPTChannelViewModel by viewModels { channelViewModelFactory }
+    private val mChannelViewModel: ChatGPTChannelStateViewModel by viewModels { channelViewModelFactory }
 
 
     @Inject
@@ -93,12 +92,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                         }
 
                         com.brins.lib_base.R.id.action_gpt_3_5 -> {
-                            mChannelViewModel.handleEvents(ChatGPTChannelViewModel.GPTChannelEvent.CreateChannelEvent3_5())
+                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEvent3_5())
                             return true
                         }
 
                         com.brins.lib_base.R.id.action_gpt_4 -> {
-                            mChannelViewModel.handleEvents(ChatGPTChannelViewModel.GPTChannelEvent.CreateChannelEvent4())
+                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEvent4())
                             return true
                         }
                     }

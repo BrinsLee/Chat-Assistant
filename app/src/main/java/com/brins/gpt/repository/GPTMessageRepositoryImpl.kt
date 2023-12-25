@@ -1,9 +1,11 @@
 package com.brins.gpt.repository
 
+import com.brins.lib_base.config.GPT_MESSAGE_KEY
 import com.brins.lib_base.config.chatGPTUser
 import com.brins.lib_base.model.GPTChatRequest
 import com.brins.lib_base.model.GPTChatResponse
 import com.brins.lib_network.service.IChatGPTService
+import com.brins.lib_network.utils.NetworkUtils
 import com.squareup.moshi.Moshi
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.models.Channel
@@ -15,42 +17,77 @@ import io.getstream.result.call.Call
 import java.util.UUID
 
 class GPTMessageRepositoryImpl @Inject constructor(
-    private val ioDispatcher: CoroutineDispatcher,
+    private val networkUtils: NetworkUtils,
     private val chatClient: ChatClient,
     private val chatGptService: IChatGPTService
 ): IGPTMessageRepository {
-    override suspend fun sendMessage(gptChatRequest: GPTChatRequest): Response<GPTChatResponse> {
-        val moshi = Moshi.Builder().build()
+    override suspend fun sendMessage(gptChatRequest: GPTChatRequest): GPTChatResponse? {
+        /*val moshi = Moshi.Builder().build()
 //        val json = moshi.adapter(GPTChatRequest::class.java).toJson(gptChatRequest)
         val response = chatGptService.sendMessage(gptChatRequest)
         if (response.isSuccessful) {
             val gptChatResponse = response.body()
         }
-        return response
+        return response*/
+        val result = networkUtils.safeApiCall { chatGptService.sendMessage(gptChatRequest) }
+        when(result) {
+            is NetworkUtils.Result.Success -> {
+                return result.data
+            }
+
+            is NetworkUtils.Result.Error -> {
+                return null
+            }
+        }
     }
 
-    override suspend fun createCompletion(gptChatRequest: GPTChatRequest): Response<GPTChatResponse> {
-        val response = chatGptService.createCompletion(gptChatRequest)
-        if (response.isSuccessful) {
-            val gptChatResponse = response.body()
+    override suspend fun createCompletion(gptChatRequest: GPTChatRequest): GPTChatResponse? {
+        val result = networkUtils.safeApiCall {
+            chatGptService.createCompletion(gptChatRequest)
         }
-        return response
+        return when(result) {
+            is NetworkUtils.Result.Success -> {
+//                val chatMessage = result.data.split("\n").maxBy { it.length }.replace("data: ", "")
+                result.data
+            }
+
+            is NetworkUtils.Result.Error -> {
+                null
+            }
+        }
+
     }
 
     override suspend fun watchIsChannelMessageEmpty(cid: String): Call<Channel> {
         return chatClient.channel(cid).watch()
     }
 
-    override suspend fun sendStreamMessage(cid: String, text: String): Call<Message> {
+    override suspend fun sendStreamMessage(cid: String, text: String, isFromMine: Boolean): Call<Message> {
         val channelClient = chatClient.channel(cid)
         return channelClient.sendMessage(
             Message(
                 id = UUID.randomUUID().toString(),
                 cid = cid,
                 text = text,
-                user = chatGPTUser,
-                extraData = mutableMapOf("ChatGpt" to true)
+                user = if (isFromMine) chatClient.getCurrentUser()!! else chatGPTUser,
+                extraData = if (isFromMine) emptyMap() else mutableMapOf(GPT_MESSAGE_KEY to true)
             )
         )
+    }
+
+    override suspend fun sendStreamMessage(message: Message, isFromMine: Boolean): Call<Message> {
+        return if (isFromMine) {
+            val channelClient = chatClient.channel(message.cid)
+            channelClient.sendMessage(message)
+        } else {
+            sendStreamMessage(message)
+        }
+
+    }
+
+    override suspend fun sendStreamMessage(message: Message): Call<Message> {
+        val channelClient = chatClient.channel(message.cid)
+        val realSendMessage = message.copy(user = chatGPTUser, extraData = mutableMapOf(GPT_MESSAGE_KEY to true))
+        return channelClient.sendMessage(realSendMessage)
     }
 }

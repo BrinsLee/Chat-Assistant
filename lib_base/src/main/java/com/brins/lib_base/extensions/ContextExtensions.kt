@@ -5,7 +5,9 @@ import android.content.Context
 import android.graphics.Color
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
+import android.widget.Toast
 import androidx.annotation.AttrRes
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.brins.lib_base.utils.ATHUtil
 import io.getstream.chat.android.ui.R
@@ -29,4 +31,12 @@ internal fun Context.createThemeWrapper(): Context {
         theme.resolveAttribute(R.attr.streamUiTheme, typedValue, true) -> ContextThemeWrapper(this, typedValue.resourceId)
         else -> ContextThemeWrapper(this, R.style.StreamUiTheme)
     }
+}
+
+fun Context.showToast(@StringRes stringRes: Int, duration: Int = Toast.LENGTH_SHORT) {
+    showToast(getString(stringRes), duration)
+}
+
+fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, message, duration).show()
 }

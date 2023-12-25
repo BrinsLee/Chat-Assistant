@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -21,7 +22,7 @@ android {
     buildTypes {
         debug {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'API_KEY', '"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"'
+            buildConfigField 'String', 'API_KEY', "\"${gptAPIKEY}\""
             buildConfigField 'String', 'CHAT_API_KEY', '"ad3mfx39mkfd"'
 
         }
@@ -52,9 +53,9 @@ dependencies {
 //    api (name: 'stream-chat-android-client-release', ext: 'aar')
 //    api (name: 'stream-chat-android-state-release', ext: 'aar')
 //    api (name: 'stream-chat-android-offline-release', ext: 'aar')
-//    api (name: 'stream-chat-android-ui-common-release', ext: 'aar')
-//    api (name: 'stream-chat-android-ui-components-release', ext: 'aar')
-//    api (name: 'stream-chat-android-ui-utils-release', ext: 'aar')
+    api (name: 'stream-chat-android-ui-common-release', ext: 'aar')
+    api (name: 'stream-chat-android-ui-components-release', ext: 'aar')
+    api (name: 'stream-chat-android-ui-utils-release', ext: 'aar')
 //    api (name: 'stream-chat-android-core-6.0.9', ext: 'jar')
 
 
@@ -74,12 +75,14 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     api "com.squareup.moshi:moshi-kotlin:$moshi_version"
+    ksp 'com.squareup.moshi:moshi-kotlin-codegen:1.13.0'
+
 //    api "org.jetbrains.kotlin:kotlin-reflect"
 
     api "io.getstream:stream-chat-android-client:$stream_version"
     api "io.getstream:stream-chat-android-state:$stream_version"
     api "io.getstream:stream-chat-android-offline:$stream_version"
-    api "io.getstream:stream-chat-android-ui-components:$stream_version"
+//    api "io.getstream:stream-chat-android-ui-components:$stream_version"
     api "io.getstream:stream-log:$stream_log_version"
 
 //    api "io.getstream:stream-chat-android-client:$stream_version"

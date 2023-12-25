@@ -36,7 +36,7 @@ class GPTChannelRepositoryImpl @Inject constructor(private val chatClient: ChatC
             channelType = "messaging",
             channelId = UUID.randomUUID().toString(),
             memberIds = listOf(userId, chatGPTUser.id),
-            extraData = mapOf("name" to generateChannelName(model))
+            extraData = mapOf("name" to generateChannelName(model), "model" to model)
         )
     }
 
@@ -45,12 +45,19 @@ class GPTChannelRepositoryImpl @Inject constructor(private val chatClient: ChatC
     }
 
 
+    /**
+     * 使用state 必须开启StatePlugin 插件 [@see][ChatApp.initStreamChat]
+     */
     override fun queryChannelsAsState(
         queryChannelsRequest: QueryChannelsRequest,
         chatEventHandlerFactory: ChatEventHandlerFactory,
         viewModelScope: CoroutineScope
     ): StateFlow<QueryChannelsState?> {
         return chatClient.queryChannelsAsState(queryChannelsRequest, chatEventHandlerFactory, viewModelScope)
+    }
+
+    override fun queryChannel(queryChannelsRequest: QueryChannelsRequest): Call<List<Channel>> {
+        return chatClient.queryChannels(queryChannelsRequest)
     }
 
     private fun generateChannelName(model: String): String {

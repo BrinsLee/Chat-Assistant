@@ -2,10 +2,12 @@ package com.brins.lib_network.di
 
 import com.brins.lib_network.interceptor.RequestHeaderInterceptor
 import com.brins.lib_network.service.IChatGPTService
+import com.brins.lib_network.utils.NetworkUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -45,5 +47,6 @@ internal object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofitService(retrofit: Retrofit): IChatGPTService = retrofit.create()
+
 
 }
