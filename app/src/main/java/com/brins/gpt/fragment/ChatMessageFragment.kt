@@ -33,11 +33,13 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
 
     private lateinit var mChannelId: String
 
+    private var mMessageId: String? = null
+
     private val factory: MessageListViewModelFactory by lazy(LazyThreadSafetyMode.NONE) {
         MessageListViewModelFactory(
             context = requireContext().applicationContext,
             cid = mChannelId,
-            messageId = null,
+            messageId = mMessageId,
         )
     }
 
@@ -54,6 +56,7 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mChannelId = arguments.extraChannelId
+        mMessageId = arguments.extraMessageId
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,7 +73,9 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
         messageComposerViewModel.apply {
             bindView(mBinding.messageComposerView, viewLifecycleOwner, sendMessageButtonClickListener = {
                 message ->
-                messageSenderViewModel.sendStreamChatMessage(message, mChannel,true)
+                messageComposerViewModel.sendMessage(message){
+                    messageSenderViewModel.sendStreamChatMessage(message, mChannel,true)
+                }
 
             })
             messageListViewModel.mode.observe(viewLifecycleOwner) {
@@ -144,5 +149,6 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
 
     companion object {
         const val EXTRA_CHANNEL_ID = "extra_channel_id"
+        const val EXTRA_MESSAGE_ID = "extra_message_id"
     }
 }

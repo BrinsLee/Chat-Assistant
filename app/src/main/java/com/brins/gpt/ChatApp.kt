@@ -94,30 +94,51 @@ class ChatApp : Application() {
      * 测试用
      */
     private fun createNewUser(chatClient: ChatClient) {
-        val userData = MMKVUtils.getString(EXTRA_KEY_USER_DATA, "")
-        val user: User
-        if (userData.isEmpty()) {
-            val userId = UUID.randomUUID().toString()
-            user = User(
-                id = userId,
-                name = "User ${Random.nextInt(10000)}",
-                image = "https://picsum.photos/id/${Random.nextInt(1000)}/300/300"
-            )
-        } else {
-            user = fromJson<User>(userData)
-        }
-        val token = chatClient.devToken(user.id)
-        chatClient.connectUser(user, token).enqueue(object : Call.Callback<ConnectionData> {
+        if (BuildConfig.DEBUG) {
+            val user: User = User(
+                id = "5b87bb36-4303-43cc-9800-ed5777a20c98",
+                name = "User 29",
+                image = "https://picsum.photos/id/488/300/300")
+            val token = chatClient.devToken(user.id)
+            chatClient.connectUser(user, token).enqueue(object : Call.Callback<ConnectionData> {
 
-            override fun onResult(result: io.getstream.result.Result<ConnectionData>) {
-                if (result.isFailure) {
-                    streamLog {
-                        "Can't connect user. Please check the app README.md and ensure " + "**Disable Auth Checks** is ON in the Dashboard"
+                override fun onResult(result: io.getstream.result.Result<ConnectionData>) {
+                    if (result.isFailure) {
+                        streamLog {
+                            "Can't connect user. Please check the app README.md and ensure " + "**Disable Auth Checks** is ON in the Dashboard"
+                        }
+                    } else if (result.isSuccess) {
+                        MMKVUtils.putString(EXTRA_KEY_USER_DATA, user.toJson())
                     }
-                } else if (result.isSuccess) {
-                    MMKVUtils.putString(EXTRA_KEY_USER_DATA, user.toJson())
                 }
+            })
+        } else {
+            val userData = MMKVUtils.getString(EXTRA_KEY_USER_DATA, "")
+            val user: User
+            if (userData.isEmpty()) {
+                val userId = UUID.randomUUID().toString()
+                user = User(
+                    id = userId,
+                    name = "User ${Random.nextInt(10000)}",
+                    image = "https://picsum.photos/id/${Random.nextInt(1000)}/300/300"
+                )
+            } else {
+                user = fromJson<User>(userData)
             }
-        })
+            val token = chatClient.devToken(user.id)
+            chatClient.connectUser(user, token).enqueue(object : Call.Callback<ConnectionData> {
+
+                override fun onResult(result: io.getstream.result.Result<ConnectionData>) {
+                    if (result.isFailure) {
+                        streamLog {
+                            "Can't connect user. Please check the app README.md and ensure " + "**Disable Auth Checks** is ON in the Dashboard"
+                        }
+                    } else if (result.isSuccess) {
+                        MMKVUtils.putString(EXTRA_KEY_USER_DATA, user.toJson())
+                    }
+                }
+            })
+        }
+
     }
 }

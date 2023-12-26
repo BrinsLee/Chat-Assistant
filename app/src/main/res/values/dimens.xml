@@ -6,5 +6,8 @@
     <dimen name="spacing_xl">32dp</dimen>
     <dimen name="spacing_xxl">40dp</dimen>
 
+    <dimen name="spacing_7dp">7dp</dimen>
+    <dimen name="spacing_8dp">8dp</dimen>
     <dimen name="spacing_50dp">50dp</dimen>
+    <dimen name="spacing_56dp">56dp</dimen>
 </resources>

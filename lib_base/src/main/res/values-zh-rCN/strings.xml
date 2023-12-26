@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_scheme">颜色主题</string>
+    <!--    color theme-->
+    <string name="color_light">浅色</string>
+    <string name="color_dark">暗色</string>
+    <string name="color_auto">跟随系统</string>
+</resources>

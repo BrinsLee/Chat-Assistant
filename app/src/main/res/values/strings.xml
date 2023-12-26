@@ -2,7 +2,7 @@
     <string name="app_name">Gpt</string>
     <string name="search">Search</string>
     <string name="more">More</string>
-    <string name="color_scheme">Color Scheme</string>
+
     <string name="language_change">Language</string>
     <string name="sign_out">Sign Out</string>
     <string name="message">Message</string>
@@ -13,5 +13,6 @@
     <string name="channel_list_delete_confirmation_negative_button">Cancel</string>
 <!--    error-->
     <string name="error_network_failure">Network connection failed, please try again later</string>
+
 
 </resources>

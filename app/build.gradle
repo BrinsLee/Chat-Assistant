@@ -24,9 +24,9 @@ android {
     signingConfigs {
         release {
             storeFile file('key.keystore.jks')
-            storePassword 'qaz1234567ppoo'
-            keyAlias 'key0'
-            keyPassword 'qaz1234567ppoo'
+            storePassword "${StorePassword}"
+            keyAlias "${KeyAlias}"
+            keyPassword "${KeyPassword}"
         }
     }
     sourceSets {

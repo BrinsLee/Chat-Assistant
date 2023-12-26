@@ -64,8 +64,8 @@ class ChatGPTMessageViewModel @Inject constructor(
 
     fun sendStreamChatMessage(message: Message, channel: Channel, isFromMine: Boolean) {
         viewModelScope.launch {
-            val result = gptMessageRepository.sendStreamMessage(message, isFromMine).await()
-            when (result) {
+//            val result = gptMessageRepository.sendStreamMessage(message, isFromMine).await()
+            /*when (result) {
                 is Result.Success -> {
                     if (channel.extraData.containsKey("model")) {
                         createCompletion(result.value, channel.extraData["model"] as String)
@@ -76,8 +76,12 @@ class ChatGPTMessageViewModel @Inject constructor(
                 is Result.Failure -> {
                     _errorEvents.postValue(ErrorEvent.SendMessageError(ErrorCode.NETWORK_FAILED))
                 }
+            }*/
+            if (channel.extraData.containsKey("model")) {
+                createCompletion(message, channel.extraData["model"] as String)
+            } else {
+                createCompletion(message, MODEL_3_5_TURBO)
             }
-
         }
     }
 

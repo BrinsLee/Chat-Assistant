@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="color_theme_name">
+        <item>@string/color_light</item>
+        <item>@string/color_dark</item>
+        <item>@string/color_auto</item>
+    </string-array>
+</resources>

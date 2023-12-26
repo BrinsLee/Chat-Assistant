@@ -174,3 +174,24 @@
     volatile <fields>;
 }
 
+-keep class com.caverock.androidsvg.SVG {}
+-keep class com.caverock.androidsvg.SVGParseException {}
+-keep class com.github.chrisbanes.photoview.PhotoView {}
+-keeppackagenames com.permissionx.guolindev.**
+-keeppackagenames pl.droidsonroids.**
+-keeppackagenames com.stfalcon.imageviewer.**
+
+-dontwarn com.caverock.androidsvg.SVG
+-dontwarn com.caverock.androidsvg.SVGParseException
+-dontwarn com.github.chrisbanes.photoview.PhotoView
+-dontwarn com.permissionx.guolindev.PermissionMediator
+-dontwarn com.permissionx.guolindev.PermissionX
+-dontwarn com.permissionx.guolindev.callback.ExplainReasonCallback
+-dontwarn com.permissionx.guolindev.callback.ForwardToSettingsCallback
+-dontwarn com.permissionx.guolindev.callback.RequestCallback
+-dontwarn com.permissionx.guolindev.request.PermissionBuilder
+-dontwarn com.stfalcon.imageviewer.StfalconImageViewer$Builder
+-dontwarn com.stfalcon.imageviewer.StfalconImageViewer
+-dontwarn com.stfalcon.imageviewer.loader.ImageLoader
+-dontwarn pl.droidsonroids.gif.GifDrawable
+

@@ -23,13 +23,13 @@ android {
         debug {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField 'String', 'API_KEY', "\"${gptAPIKEY}\""
-            buildConfigField 'String', 'CHAT_API_KEY', '"ad3mfx39mkfd"'
+            buildConfigField 'String', 'CHAT_API_KEY', "\"${chatAPIKEY}\""
 
         }
         release {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'API_KEY', '""'
-            buildConfigField 'String', 'CHAT_API_KEY', '"ad3mfx39mkfd"'
+            buildConfigField 'String', 'API_KEY', "\"${gptAPIKEY}\""
+            buildConfigField 'String', 'CHAT_API_KEY', "\"${chatAPIKEY}\""
 
         }
     }

@@ -4,4 +4,9 @@
     <string name="more">More</string>
     <string name="disconnected" tools:ignore="ExtraTranslation">Disconnected</string>
     <string name="waiting_for_network" tools:ignore="ExtraTranslation">Waiting for network</string>
+    <string name="color_scheme">Color Scheme</string>
+    <!--    color theme-->
+    <string name="color_light">light</string>
+    <string name="color_dark">dark</string>
+    <string name="color_auto">auto</string>
 </resources>
