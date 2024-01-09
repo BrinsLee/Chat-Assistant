@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
 import com.brins.gpt.R
-import com.brins.gpt.extensions.addFlow
 import com.brins.gpt.extensions.combineWith
 import com.brins.gpt.extensions.enqueue
 import com.brins.gpt.repository.GPTChannelRepositoryImpl
@@ -21,9 +20,7 @@ import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.models.FilterObject
 import io.getstream.chat.android.models.querysort.QuerySortByField
 import io.getstream.chat.android.models.querysort.QuerySorter
-import io.getstream.chat.android.state.event.handler.chat.factory.ChatEventHandlerFactory
 import io.getstream.chat.android.state.plugin.state.querychannels.ChannelsStateData
-import io.getstream.chat.android.state.plugin.state.querychannels.QueryChannelsState
 import io.getstream.chat.android.ui.feature.channels.list.ChannelListView
 import io.getstream.chat.android.ui.feature.channels.list.adapter.ChannelListItem
 import io.getstream.chat.android.ui.viewmodel.channels.ChannelListViewModel
@@ -35,11 +32,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 
 class ChatGPTChannelViewModel(
@@ -343,6 +336,8 @@ class ChatGPTChannelViewModel(
         class CreateChannelEvent3_5(model: String = MODEL_3_5_TURBO_1106) : GPTChannelEvent(model)
 
         class CreateChannelEvent4(model: String = MODEL_4_1106_PREVIEW): GPTChannelEvent(model)
+
+        class CreateChannelEventVision4(model: String = MODEL_4_1106_PREVIEW): GPTChannelEvent(model)
     }
 
     /**

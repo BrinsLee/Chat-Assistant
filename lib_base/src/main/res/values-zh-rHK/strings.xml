@@ -4,4 +4,7 @@
     <string name="color_light">淺色</string>
     <string name="color_dark">暗色</string>
     <string name="color_auto">跟隨系統</string>
+
+    <string name="default_vision_prompts">這些圖像裏有什麽？他們之間有什麽區別？</string>
+    <string name="default_vision_prompt">這張圖片裏有什麽？</string>
 </resources>

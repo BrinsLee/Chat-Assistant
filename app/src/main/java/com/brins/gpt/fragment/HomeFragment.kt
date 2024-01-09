@@ -148,7 +148,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                         }
 
                         com.brins.lib_base.R.id.action_gpt_4 -> {
-                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEvent4())
+//                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEvent4())
+                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEventVision4())
                             return true
                         }
                     }

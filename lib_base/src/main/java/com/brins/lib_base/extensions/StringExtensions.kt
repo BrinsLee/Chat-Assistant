@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
+import kotlin.random.Random
 
 internal fun String.getOccurrenceRanges(items: List<String>? = null, ignoreCase: Boolean = false): List<IntRange> {
     val regexOptions: Set<RegexOption> = setOfNotNull(RegexOption.IGNORE_CASE.takeIf { ignoreCase })
@@ -23,3 +24,11 @@ internal fun String.bold(items: List<String>? = null, ignoreCase: Boolean = fals
 
 internal fun String.italicize(items: List<String>? = null, ignoreCase: Boolean = false): SpannableString =
     applyTypeface(Typeface.ITALIC, getOccurrenceRanges(items, ignoreCase))
+
+fun String.createUserName(): String {
+    return "User $this"
+}
+
+fun String.createUserAvatar(): String {
+    return "https://picsum.photos/id/${this}/300/300"
+}

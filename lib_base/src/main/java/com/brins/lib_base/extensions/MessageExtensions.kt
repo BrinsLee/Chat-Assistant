@@ -1,13 +1,19 @@
 package com.brins.lib_base.extensions
 
-import android.content.Context
+import androidx.core.content.ContextCompat
+import com.brins.lib_base.R
 import com.brins.lib_base.config.GPT_MESSAGE_KEY
 import com.brins.lib_base.config.ROLE_USER
 import com.brins.lib_base.model.GPTChatResponse
 import com.brins.lib_base.model.GPTMessage
+import com.brins.lib_base.model.vision.CONTENT_TYPE_IMAGE
+import com.brins.lib_base.model.vision.CONTENT_TYPE_TEXT
+import com.brins.lib_base.model.vision.DETAIL_LEVEL_HIGH
+import com.brins.lib_base.model.vision.GPTContent
+import com.brins.lib_base.model.vision.GPTImageUrl
+import com.brins.lib_base.model.vision.GPTMessageVision
+import com.brins.lib_base.utils.AppUtils
 import io.getstream.chat.android.models.Message
-import io.getstream.chat.android.ui.R
-import java.util.UUID
 
 fun Message.isSameMessage(message: Message): Boolean {
     return this.identifierHash() == message.identifierHash()
@@ -24,8 +30,23 @@ fun Message.getSenderDisplayNames(isDirectMessaging: Boolean = false): String? =
 }
 
 fun Message.toGPTMessage(): GPTMessage {
-    return GPTMessage( ROLE_USER, this.text)
+    return GPTMessage(ROLE_USER, this.text)
 }
+
+fun Message.toGPTMessageVision(): GPTMessageVision {
+    val prompt = if (this.text.isNotEmpty()) this.text else if (this.attachments.size > 1)
+        ContextCompat.getString(AppUtils.sApplication!!.applicationContext, R.string.default_vision_prompts)
+    else ContextCompat.getString(AppUtils.sApplication!!.applicationContext, R.string.default_vision_prompt)
+    val gptContentText: GPTContent = GPTContent(CONTENT_TYPE_TEXT, prompt)
+    val gptContentImages: List<GPTContent> = this.attachments.map { attachment ->
+        GPTContent(CONTENT_TYPE_IMAGE, imageUrl = GPTImageUrl(attachment.imageUrl?:"", DETAIL_LEVEL_HIGH) )
+    }
+    val messageList: MutableList<GPTContent> = mutableListOf()
+    messageList.add(gptContentText)
+    messageList.addAll(gptContentImages)
+    return GPTMessageVision(ROLE_USER, messageList)
+}
+
 
 fun GPTChatResponse.toMessage(cid: String): Message {
     val id = this.id

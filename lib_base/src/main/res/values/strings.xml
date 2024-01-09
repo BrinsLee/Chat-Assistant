@@ -9,4 +9,8 @@
     <string name="color_light">light</string>
     <string name="color_dark">dark</string>
     <string name="color_auto">auto</string>
+
+    <!--default vision prompt-->
+    <string name="default_vision_prompts">What are in these images? Is there any difference between them?</string>
+    <string name="default_vision_prompt">What’s in this image?</string>
 </resources>

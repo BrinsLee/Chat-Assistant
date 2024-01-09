@@ -6,10 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.brins.gpt.repository.IGPTMessageRepository
 import com.brins.lib_base.config.MODEL_3_5_TURBO
+import com.brins.lib_base.config.MODEL_4_VISION_PREVIEW
 import com.brins.lib_base.config.chatGPTUser
 import com.brins.lib_base.extensions.toGPTMessage
+import com.brins.lib_base.extensions.toGPTMessageVision
 import com.brins.lib_base.extensions.toMessage
 import com.brins.lib_base.model.GPTChatRequest
+import com.brins.lib_base.model.vision.GPTChatRequestVision
 import com.brins.lib_network.error.ErrorCode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.getstream.chat.android.models.Channel
@@ -36,12 +39,12 @@ class ChatGPTMessageViewModel @Inject constructor(
     private val _errorEvents: MutableLiveData<ErrorEvent> = MutableLiveData()
     val errorEvents: LiveData<ErrorEvent> = _errorEvents
 
-    fun createCompletion(message: Message, model: String) {
+    private fun createCompletion(message: Message, model: String) {
         _typingState.value = TypingState.Typing(chatGPTUser)
         viewModelScope.launch {
-            val gptRequest: GPTChatRequest =
+            val gptChatRequest: GPTChatRequest =
                 GPTChatRequest(messages = listOf(message.toGPTMessage()), model)
-            val result = gptMessageRepository.createCompletion(gptRequest)
+            val result = gptMessageRepository.createCompletion(gptChatRequest)
             if (result != null) {
                 gptMessageRepository.sendStreamMessage(result.toMessage(message.cid)).await()
             } else {
@@ -50,6 +53,24 @@ class ChatGPTMessageViewModel @Inject constructor(
             _typingState.value = TypingState.Normal
         }
     }
+
+    private fun createCompletionVision(message: Message, model: String = MODEL_4_VISION_PREVIEW) {
+        _typingState.value = TypingState.Typing(chatGPTUser)
+        viewModelScope.launch {
+            val gptChatRequestVision: GPTChatRequestVision = GPTChatRequestVision(messages = listOf(message.toGPTMessageVision()), model)
+            val result = gptMessageRepository.createCompletion(gptChatRequestVision)
+            if (result != null) {
+                gptMessageRepository.sendStreamMessage(result.toMessage(message.cid)).await()
+            } else {
+                _errorEvents.postValue(ErrorEvent.SendMessageError(ErrorCode.NETWORK_FAILED))
+            }
+            _typingState.value = TypingState.Normal
+        }
+
+    }
+
+
+
 
     fun sendStreamChatMessage(cid: String, text: String, isFromMine: Boolean) {
         viewModelScope.launch {
@@ -64,20 +85,13 @@ class ChatGPTMessageViewModel @Inject constructor(
 
     fun sendStreamChatMessage(message: Message, channel: Channel, isFromMine: Boolean) {
         viewModelScope.launch {
-//            val result = gptMessageRepository.sendStreamMessage(message, isFromMine).await()
-            /*when (result) {
-                is Result.Success -> {
-                    if (channel.extraData.containsKey("model")) {
-                        createCompletion(result.value, channel.extraData["model"] as String)
-                    } else {
-                        createCompletion(result.value, MODEL_3_5_TURBO)
-                    }
-                }
-                is Result.Failure -> {
-                    _errorEvents.postValue(ErrorEvent.SendMessageError(ErrorCode.NETWORK_FAILED))
-                }
-            }*/
-            if (channel.extraData.containsKey("model")) {
+            /**
+             * 根据消息选择模型
+             */
+            if (message.attachments.isNotEmpty()) {
+                //有附件，使用 MODEL_4_VISION_PREVIEW
+                createCompletionVision(message)
+            } else if (channel.extraData.containsKey("model")) {
                 createCompletion(message, channel.extraData["model"] as String)
             } else {
                 createCompletion(message, MODEL_3_5_TURBO)

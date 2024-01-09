@@ -2,6 +2,7 @@ package com.brins.gpt.repository
 
 import com.brins.lib_base.model.GPTChatRequest
 import com.brins.lib_base.model.GPTChatResponse
+import com.brins.lib_base.model.vision.GPTChatRequestVision
 import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.models.Message
 import io.getstream.result.call.Call
@@ -12,6 +13,8 @@ interface IGPTMessageRepository {
     suspend fun sendMessage(gptChatRequest: GPTChatRequest): GPTChatResponse?
 
     suspend fun createCompletion(gptChatRequest: GPTChatRequest): GPTChatResponse?
+
+    suspend fun createCompletion(gptChatRequest: GPTChatRequestVision): GPTChatResponse?
 
     suspend fun watchIsChannelMessageEmpty(cid: String): Call<Channel>
 

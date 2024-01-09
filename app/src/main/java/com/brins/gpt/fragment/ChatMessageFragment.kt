@@ -8,6 +8,10 @@ import androidx.navigation.fragment.navArgs
 import com.brins.gpt.R
 import com.brins.gpt.databinding.FragmentChatMessageBinding
 import com.brins.gpt.viewmodel.ChatGPTMessageViewModel
+import com.brins.gpt.widget.GPT3MessageComposerLeadingContent
+import com.brins.gpt.widget.GPT3MessageComposerTrailingContent
+import com.brins.gpt.widget.GPT4MessageComposerLeadingContent
+import com.brins.gpt.widget.GPT4MessageComposerTrailingContent
 import com.brins.lib_base.base.BaseFragment
 import com.brins.lib_base.extensions.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -70,11 +74,21 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
     }
 
     private fun setUpMessageComposerView() {
+        // todo 根据是否付费判断是否展示附件按钮
+        if (false) {
+            mBinding.messageComposerView.setLeadingContent(GPT3MessageComposerLeadingContent(requireContext()))
+            mBinding.messageComposerView.setTrailingContent(GPT3MessageComposerTrailingContent(requireContext()))
+        } else {
+            mBinding.messageComposerView.setLeadingContent(GPT4MessageComposerLeadingContent(requireContext()))
+            mBinding.messageComposerView.setTrailingContent(GPT4MessageComposerTrailingContent(requireContext()))
+        }
         messageComposerViewModel.apply {
             bindView(mBinding.messageComposerView, viewLifecycleOwner, sendMessageButtonClickListener = {
                 message ->
-                messageComposerViewModel.sendMessage(message){
-                    messageSenderViewModel.sendStreamChatMessage(message, mChannel,true)
+                messageComposerViewModel.sendMessage(message){ sentMessage->
+                    if (sentMessage.isSuccess) {
+                        messageSenderViewModel.sendStreamChatMessage(sentMessage.getOrNull()!!, mChannel,true)
+                    }
                 }
 
             })

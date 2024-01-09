@@ -16,6 +16,7 @@ import com.brins.gpt.extensions.enqueue
 import com.brins.gpt.repository.GPTChannelRepositoryImpl
 import com.brins.lib_base.config.MODEL_3_5_TURBO_1106
 import com.brins.lib_base.config.MODEL_4_1106_PREVIEW
+import com.brins.lib_base.config.MODEL_4_VISION_PREVIEW
 import io.getstream.chat.android.client.api.models.QueryChannelsRequest
 import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.models.FilterObject
@@ -313,6 +314,8 @@ class ChatGPTChannelStateViewModel(
         class CreateChannelEvent3_5(model: String = MODEL_3_5_TURBO_1106) : GPTChannelEvent(model)
 
         class CreateChannelEvent4(model: String = MODEL_4_1106_PREVIEW): GPTChannelEvent(model)
+
+        class CreateChannelEventVision4(model: String = MODEL_4_VISION_PREVIEW): GPTChannelEvent(model)
     }
 
     /**

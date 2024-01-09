@@ -3,8 +3,11 @@ package com.brins.gpt
 import android.app.Application
 import com.brins.lib_base.BuildConfig
 import com.brins.lib_base.config.EXTRA_KEY_USER_DATA
+import com.brins.lib_base.extensions.createUserAvatar
+import com.brins.lib_base.extensions.createUserName
 import com.brins.lib_base.extensions.fromJson
 import com.brins.lib_base.extensions.toJson
+import com.brins.lib_base.utils.AppUtils
 import com.brins.lib_base.utils.formatter.ChatDateFormatter
 import com.brins.lib_base.utils.CustomChatClientDebugger
 import com.brins.lib_base.utils.MMKVUtils
@@ -48,6 +51,7 @@ class ChatApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        AppUtils.init(this)
         initFormatter()
         initMMKV()
         initStreamChat()
@@ -98,7 +102,7 @@ class ChatApp : Application() {
             val user: User = User(
                 id = "5b87bb36-4303-43cc-9800-ed5777a20c98",
                 name = "User 29",
-                image = "https://picsum.photos/id/488/300/300")
+                image = "https://www.picsum.photos/id/488/300/300")
             val token = chatClient.devToken(user.id)
             chatClient.connectUser(user, token).enqueue(object : Call.Callback<ConnectionData> {
 
@@ -119,8 +123,8 @@ class ChatApp : Application() {
                 val userId = UUID.randomUUID().toString()
                 user = User(
                     id = userId,
-                    name = "User ${Random.nextInt(10000)}",
-                    image = "https://picsum.photos/id/${Random.nextInt(1000)}/300/300"
+                    name = "${Random.nextInt(10000)}".createUserName(),
+                    image = "${Random.nextInt(1000)}".createUserAvatar()
                 )
             } else {
                 user = fromJson<User>(userData)

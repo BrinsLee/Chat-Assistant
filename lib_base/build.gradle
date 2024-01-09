@@ -50,22 +50,9 @@ android {
 dependencies {
 
     api (name: 'stream-chat-android-markdown-transformer-release', ext: 'aar')
-//    api (name: 'stream-chat-android-client-release', ext: 'aar')
-//    api (name: 'stream-chat-android-state-release', ext: 'aar')
-//    api (name: 'stream-chat-android-offline-release', ext: 'aar')
     api (name: 'stream-chat-android-ui-common-release', ext: 'aar')
     api (name: 'stream-chat-android-ui-components-release', ext: 'aar')
     api (name: 'stream-chat-android-ui-utils-release', ext: 'aar')
-//    api (name: 'stream-chat-android-core-6.0.9', ext: 'jar')
-
-
-/*    api project(":stream-chat-android-core")
-    api project(":stream-chat-android-ui-utils")
-    api project(":stream-chat-android-ui-components")
-    api project(":stream-chat-android-ui-components")
-    api project(":stream-chat-android-client")
-    api project(":stream-chat-android-state")
-    api project(":stream-chat-android-offline")*/
 
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -82,24 +69,8 @@ dependencies {
     api "io.getstream:stream-chat-android-client:$stream_version"
     api "io.getstream:stream-chat-android-state:$stream_version"
     api "io.getstream:stream-chat-android-offline:$stream_version"
-//    api "io.getstream:stream-chat-android-ui-components:$stream_version"
     api "io.getstream:stream-log:$stream_log_version"
 
-//    api "io.getstream:stream-chat-android-client:$stream_version"
-//    api "io.getstream:stream-chat-android-state:$stream_version"
-//    api "io.getstream:stream-chat-android-offline:$stream_version"
-//    api "io.getstream:stream-chat-android-ui-components:$stream_version"
-    /*api "io.getstream:stream-result:$stream_result"
-    api "io.getstream:stream-result-call:$stream_result"
-    api "io.getstream:stream-android-push:$stream_push"
-    api "io.getstream:stream-android-push-permissions:$stream_push"
-    api "io.getstream:stream-android-push-permissions-snackbar:$stream_push"
-    api "io.getstream:stream-android-push-delegate:$stream_push"
-    api "io.getstream:stream-android-push-firebase:$stream_push"*/
-/*    api "io.getstream:stream-android-push-huawei:$stream_push"
-    api "io.getstream:stream-android-push-xiaomi:$stream_push"*/
-/*    api "io.getstream:stream-log:$stream_log_version"
-    api "io.getstream:stream-log-android:$stream_log_version"*/
     api "io.noties.markwon:core:$markdown_version"
     api "io.noties.markwon:linkify:$markdown_version"
     api "io.noties.markwon:ext-strikethrough:$markdown_version"
@@ -121,4 +92,6 @@ dependencies {
     api "io.coil-kt:coil:$coil_version"
     api "io.coil-kt:coil-gif:$coil_version"
     api "io.coil-kt:coil-video:$coil_version"
+    api "com.guolindev.permissionx:permissionx:$permission_x"
+    api "com.github.chrisbanes:PhotoView:$photoview_version"
 }

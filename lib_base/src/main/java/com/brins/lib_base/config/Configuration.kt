@@ -46,6 +46,8 @@ const val MODEL_3_5_TURBO_1106 = "gpt-3.5-turbo-1106"
 
 // Up to Apr 2023
 const val MODEL_4_1106_PREVIEW = "gpt-4-1106-preview"
+// vision-preview
+const val MODEL_4_VISION_PREVIEW = "gpt-4-vision-preview"
 
 /**
  * 请求头参数

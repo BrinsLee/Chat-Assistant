@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package com.brins.lib_base.model
+package com.brins.lib_base.model.vision
 
+import com.brins.lib_base.config.ROLE_USER
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class GPTContent(
-  @field:Json(name = "content_type") val content_type: String = "text",
-  @field:Json(name = "parts") val parts: List<String> = listOf()
+data class GPTMessageVision(
+//  @field:Json(name = "mid") val mid: String,
+  @field:Json(name = "role") val role: String = ROLE_USER,
+  @field:Json(name = "content") val content: List<GPTContent>
 )

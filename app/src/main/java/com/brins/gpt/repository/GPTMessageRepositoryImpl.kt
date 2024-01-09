@@ -4,6 +4,7 @@ import com.brins.lib_base.config.GPT_MESSAGE_KEY
 import com.brins.lib_base.config.chatGPTUser
 import com.brins.lib_base.model.GPTChatRequest
 import com.brins.lib_base.model.GPTChatResponse
+import com.brins.lib_base.model.vision.GPTChatRequestVision
 import com.brins.lib_network.service.IChatGPTService
 import com.brins.lib_network.utils.NetworkUtils
 import com.squareup.moshi.Moshi
@@ -47,7 +48,6 @@ class GPTMessageRepositoryImpl @Inject constructor(
         }
         return when(result) {
             is NetworkUtils.Result.Success -> {
-//                val chatMessage = result.data.split("\n").maxBy { it.length }.replace("data: ", "")
                 result.data
             }
 
@@ -55,7 +55,20 @@ class GPTMessageRepositoryImpl @Inject constructor(
                 null
             }
         }
+    }
 
+    override suspend fun createCompletion(gptChatRequest: GPTChatRequestVision): GPTChatResponse? {
+        val result = networkUtils.safeApiCall {
+            chatGptService.createCompletion(gptChatRequest)
+        }
+        return when(result) {
+            is NetworkUtils.Result.Success -> {
+                result.data
+            }
+            is NetworkUtils.Result.Error -> {
+                null
+            }
+        }
     }
 
     override suspend fun watchIsChannelMessageEmpty(cid: String): Call<Channel> {
