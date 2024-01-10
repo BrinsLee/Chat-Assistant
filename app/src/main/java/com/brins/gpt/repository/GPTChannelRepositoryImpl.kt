@@ -1,11 +1,14 @@
 package com.brins.gpt.repository
 
 import com.brins.gpt.ChatApp
-import com.brins.lib_base.config.CHANNEL_NAME_PREFIX
+import com.brins.lib_base.config.IMAGE_CHANNEL_NAME_PREFIX
+import com.brins.lib_base.config.MESSAGE_CHANNEL_NAME_PREFIX
 import com.brins.lib_base.config.MODEL_3_5_TURBO
 import com.brins.lib_base.config.MODEL_3_5_TURBO_1106
 import com.brins.lib_base.config.MODEL_4_1106_PREVIEW
 import com.brins.lib_base.config.MODEL_4_VISION_PREVIEW
+import com.brins.lib_base.config.MODEL_DALL_E_2
+import com.brins.lib_base.config.MODEL_DALL_E_3
 import com.brins.lib_base.config.chatGPTUser
 import com.brins.lib_base.extensions.defaultChannelListFilter
 import io.getstream.chat.android.client.ChatClient
@@ -16,7 +19,6 @@ import io.getstream.chat.android.models.Filters
 import io.getstream.chat.android.state.event.handler.chat.factory.ChatEventHandlerFactory
 import io.getstream.chat.android.state.extensions.queryChannelsAsState
 import io.getstream.chat.android.state.plugin.state.querychannels.QueryChannelsState
-import io.getstream.chat.android.ui.common.helper.DateFormatter
 import io.getstream.result.call.Call
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -63,10 +65,10 @@ class GPTChannelRepositoryImpl @Inject constructor(private val chatClient: ChatC
 
     private fun generateChannelName(model: String): String {
         val builder: StringBuilder = StringBuilder()
-        builder.append(CHANNEL_NAME_PREFIX)
         when(model) {
-            MODEL_3_5_TURBO_1106, MODEL_3_5_TURBO -> builder.append(3)
-            MODEL_4_1106_PREVIEW, MODEL_4_VISION_PREVIEW -> builder.append(4)
+            MODEL_3_5_TURBO_1106, MODEL_3_5_TURBO -> builder.append(MESSAGE_CHANNEL_NAME_PREFIX).append(3)
+            MODEL_4_1106_PREVIEW, MODEL_4_VISION_PREVIEW -> builder.append(MESSAGE_CHANNEL_NAME_PREFIX).append(4)
+            MODEL_DALL_E_2, MODEL_DALL_E_3 -> builder.append(IMAGE_CHANNEL_NAME_PREFIX)
         }
         val currentDate = Date()
         val date = ChatApp.dateDefaultFormat.formatDateTime(currentDate)

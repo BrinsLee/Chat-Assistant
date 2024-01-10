@@ -3,6 +3,8 @@ package com.brins.lib_network.service
 import com.brins.lib_base.model.GPTChatRequest
 import com.brins.lib_base.model.GPTChatResponse
 import com.brins.lib_base.model.OpenAIReuqest
+import com.brins.lib_base.model.image.GPTImageRequest
+import com.brins.lib_base.model.image.GPTImageResponse
 import com.brins.lib_base.model.vision.GPTChatRequestVision
 import retrofit2.Response
 import retrofit2.http.Body
@@ -32,4 +34,11 @@ interface IChatGPTService {
      */
     @POST("v1/chat/completions")
     suspend fun createCompletion(@Body body: GPTChatRequestVision): Response<GPTChatResponse>
+
+
+    /**
+     * 生成图片接口
+     */
+    @POST("v1/images/generations")
+    suspend fun createImage(@Body body: GPTImageRequest): Response<GPTImageResponse>
 }

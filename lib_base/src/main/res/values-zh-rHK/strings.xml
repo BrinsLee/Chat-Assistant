@@ -7,4 +7,8 @@
 
     <string name="default_vision_prompts">這些圖像裏有什麽？他們之間有什麽區別？</string>
     <string name="default_vision_prompt">這張圖片裏有什麽？</string>
+
+    <string name="gpt_3_5">GPT-3.5</string>
+    <string name="gpt_4">GPT-4</string>
+    <string name="dall_picture_generation">Dall-e 圖像生產</string>
 </resources>

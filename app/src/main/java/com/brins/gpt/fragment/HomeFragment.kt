@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
@@ -22,9 +21,14 @@ import com.brins.gpt.databinding.FragmentHomeBinding
 import com.brins.gpt.di.GPTChannelViewModelFactory
 import com.brins.gpt.extensions.bindsView
 import com.brins.gpt.viewmodel.ChatGPTChannelStateViewModel
-import com.brins.gpt.viewmodel.ChatGPTMessageViewModel
 import com.brins.gpt.viewmodel.ChatGPTUserInfoViewModel
 import com.brins.lib_base.base.BaseFragment
+import com.brins.lib_base.config.MODEL_3_5_TURBO
+import com.brins.lib_base.config.MODEL_3_5_TURBO_1106
+import com.brins.lib_base.config.MODEL_4_1106_PREVIEW
+import com.brins.lib_base.config.MODEL_4_VISION_PREVIEW
+import com.brins.lib_base.config.MODEL_DALL_E_2
+import com.brins.lib_base.config.MODEL_DALL_E_3
 import com.brins.lib_base.extensions.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import io.getstream.chat.android.ui.viewmodel.channels.ChannelListHeaderViewModel
@@ -76,17 +80,17 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mBinding = FragmentHomeBinding.bind(view)
-        setUpBackPressListener()
-        setUpChannelListHeader()
-        setUpSearchInput()
-        setUpSearchResultList()
-        setUpChannelViews()
-        setUpNavigationDrawer()
+        setupBackPressListener()
+        setupChannelListHeader()
+        setupSearchInput()
+        setupSearchResultList()
+        setupChannelViews()
+        setupNavigationDrawer()
         observerStateAndEvents()
         mUserInfoViewModel.fetchUserInfo()
     }
 
-    private fun setUpSearchInput() {
+    private fun setupSearchInput() {
         with(mBinding.searchInputView) {
             setDebouncedInputChangedListener {query ->
                 if (query.isEmpty()) {
@@ -102,17 +106,27 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             }
         }
     }
-    private fun setUpSearchResultList() {
+    private fun setupSearchResultList() {
         with(mBinding.searchResultListView) {
             searchViewModel.bindView(this, viewLifecycleOwner)
-            setSearchResultSelectedListener {
-                navigateTo(R.id.chatMessageFragment, bundleOf(ChatMessageFragment.EXTRA_CHANNEL_ID to it.cid, ChatMessageFragment.EXTRA_MESSAGE_ID to it.id))
+            setSearchResultSelectedListener { message ->
+                when(message.extraData["model"]) {
+                    MODEL_3_5_TURBO, MODEL_3_5_TURBO_1106, MODEL_4_1106_PREVIEW, MODEL_4_VISION_PREVIEW -> {
+                        navigateTo(R.id.chatMessageFragment, bundleOf(BaseChatFragment.EXTRA_CHANNEL_ID to message.cid, BaseChatFragment.EXTRA_MESSAGE_ID to message.id))
+                    }
+                    MODEL_DALL_E_2, MODEL_DALL_E_3 -> {
+                        navigateTo(R.id.chatImageFragment, bundleOf(BaseChatFragment.EXTRA_CHANNEL_ID to message.cid, BaseChatFragment.EXTRA_MESSAGE_ID to message.id))
+                    }
+                    else -> {
+                        navigateTo(R.id.chatMessageFragment, bundleOf(BaseChatFragment.EXTRA_CHANNEL_ID to message.cid, BaseChatFragment.EXTRA_MESSAGE_ID to message.id))
+                    }
+                }
             }
         }
     }
 
 
-    private fun setUpBackPressListener() {
+    private fun setupBackPressListener() {
         activity?.apply {
             onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
                 if (mBinding.searchInputView.isVisible()) {
@@ -125,7 +139,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         }
     }
 
-    private fun setUpChannelListHeader() {
+    private fun setupChannelListHeader() {
         with(mBinding.channelListHeader) {
             channelListHeaderViewModel.bindsView(this, viewLifecycleOwner)
             setOnMenuItemClickListener(object :
@@ -148,9 +162,13 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                         }
 
                         com.brins.lib_base.R.id.action_gpt_4 -> {
-//                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEvent4())
-                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEventVision4())
+                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEvent4())
+//                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEventVision4())
                             return true
+                        }
+
+                        com.brins.lib_base.R.id.action_dall -> {
+                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEventDall())
                         }
                     }
                     return false
@@ -177,7 +195,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
 
 
-    private fun setUpNavigationDrawer() {
+    private fun setupNavigationDrawer() {
         AppBarConfiguration(
             setOf(R.id.changeColor, R.id.changeLanguage), mBinding.drawerLayout
         )
@@ -269,11 +287,22 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         }
     }
 
-    private fun setUpChannelViews() {
+    private fun setupChannelViews() {
         with(mBinding.channelList) {
             mChannelViewModel.bindView(this, viewLifecycleOwner)
-            setChannelItemClickListener {
-                navigateTo(R.id.chatMessageFragment, bundleOf(ChatMessageFragment.EXTRA_CHANNEL_ID to it.cid))
+            setChannelItemClickListener { channel ->
+                when (channel.extraData["model"]) {
+                    MODEL_3_5_TURBO, MODEL_3_5_TURBO_1106, MODEL_4_1106_PREVIEW, MODEL_4_VISION_PREVIEW -> {
+                        navigateTo(R.id.chatMessageFragment, bundleOf(BaseChatFragment.EXTRA_CHANNEL_ID to channel.cid))
+                    }
+                    MODEL_DALL_E_2, MODEL_DALL_E_3 -> {
+                        navigateTo(R.id.chatImageFragment, bundleOf(BaseChatFragment.EXTRA_CHANNEL_ID to channel.cid))
+                    }
+                    else -> {
+                        navigateTo(R.id.chatMessageFragment, bundleOf(BaseChatFragment.EXTRA_CHANNEL_ID to channel.cid))
+                    }
+                }
+
             }
         }
         /*with(mBinding.channelList) {

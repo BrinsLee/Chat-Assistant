@@ -85,9 +85,7 @@ class ChatApp : Application() {
         val chatClient = ChatClient.Builder(BuildConfig.CHAT_API_KEY, this).logLevel(logLevel)
             .withPlugins(offlinePluginFactory, statePluginFactory)
             .uploadAttachmentsNetworkType(UploadAttachmentsNetworkType.NOT_ROAMING).apply {
-                if (BuildConfig.DEBUG) {
-                    this.debugRequests(true).clientDebugger(customChatClientDebugger)
-                }
+                this.debugRequests(true).clientDebugger(customChatClientDebugger)
             }.build()
         createNewUser(chatClient)
         ChatUI.messageTextTransformer = MarkdownTextTransformer(this)

@@ -8,4 +8,8 @@
 
     <string name="default_vision_prompts">这些图像里有什么？它们之间有什么区别吗？</string>
     <string name="default_vision_prompt">这张图里有什么？</string>
+
+    <string name="gpt_3_5">GPT-3.5</string>
+    <string name="gpt_4">GPT-4</string>
+    <string name="dall_picture_generation">Dall-e 图像生成</string>
 </resources>

@@ -18,10 +18,14 @@
         <menu>
             <item
                 android:id="@+id/action_gpt_3_5"
-                android:title="GPT-3.5" />
+                android:title="@string/gpt_3_5" />
             <item
                 android:id="@+id/action_gpt_4"
-                android:title="GPT-4" />
+                android:title="@string/gpt_4" />
+
+            <item
+                android:id="@+id/action_dall"
+                android:title="@string/dall_picture_generation" />
         </menu>
     </item>
 </menu>

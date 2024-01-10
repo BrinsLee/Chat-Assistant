@@ -1,21 +1,7 @@
 package com.brins.lib_base.config
 
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
 import com.brins.lib_base.BuildConfig
-import com.brins.lib_base.BuildConfig.CHAT_API_KEY
-import com.brins.lib_base.extensions.bold
-import com.brins.lib_base.extensions.getSenderDisplayNames
-import com.brins.lib_base.extensions.isFromChatGPT
-import com.brins.lib_base.model.user.ChatUser
-import io.getstream.chat.android.client.utils.message.isSystem
-import io.getstream.chat.android.models.Channel
-import io.getstream.chat.android.models.Message
 import io.getstream.chat.android.models.User
-import io.getstream.chat.android.ui.ChatUI
-import io.getstream.chat.android.ui.common.utils.extensions.isDirectMessaging
-import io.getstream.chat.android.ui.helper.MessagePreviewFormatter
-
 
 
 /**
@@ -23,7 +9,9 @@ import io.getstream.chat.android.ui.helper.MessagePreviewFormatter
  */
 const val API_KEY = BuildConfig.API_KEY
 
-const val CHANNEL_NAME_PREFIX = "GPT-"
+const val MESSAGE_CHANNEL_NAME_PREFIX = "GPT-"
+
+const val IMAGE_CHANNEL_NAME_PREFIX = "Dall-e"
 
 const val GPT_MESSAGE_KEY = "ChatGpt"
 
@@ -48,6 +36,10 @@ const val MODEL_3_5_TURBO_1106 = "gpt-3.5-turbo-1106"
 const val MODEL_4_1106_PREVIEW = "gpt-4-1106-preview"
 // vision-preview
 const val MODEL_4_VISION_PREVIEW = "gpt-4-vision-preview"
+// dall-e-3 生成图片
+const val MODEL_DALL_E_3 = "dall-e-3"
+// dall-e-2 生成图片
+const val MODEL_DALL_E_2 = "dall-e-2"
 
 /**
  * 请求头参数

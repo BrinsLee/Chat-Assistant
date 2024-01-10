@@ -14,6 +14,7 @@ import com.brins.lib_base.extensions.toMessage
 import com.brins.lib_base.model.GPTChatRequest
 import com.brins.lib_base.model.vision.GPTChatRequestVision
 import com.brins.lib_network.error.ErrorCode
+import com.kunminx.architecture.domain.message.MutableResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.models.Message
@@ -30,14 +31,14 @@ class ChatGPTMessageViewModel @Inject constructor(
     private val gptMessageRepository: IGPTMessageRepository
 ) : ViewModel() {
 
-    private val _isMessageEmpty: MutableLiveData<Boolean> = MutableLiveData()
-    val isMessageEmpty: LiveData<Boolean> = _isMessageEmpty
+    private val _isMessageEmpty: MutableResult<Boolean> = MutableResult()
+    val isMessageEmpty: com.kunminx.architecture.domain.message.Result<Boolean> = _isMessageEmpty
 
     private val _typingState: MutableLiveData<TypingState> = MutableLiveData(TypingState.Normal)
     val typingState: LiveData<TypingState> = _typingState
 
-    private val _errorEvents: MutableLiveData<ErrorEvent> = MutableLiveData()
-    val errorEvents: LiveData<ErrorEvent> = _errorEvents
+    private val _errorEvents: MutableResult<ErrorEvent> = MutableResult()
+    val errorEvents: com.kunminx.architecture.domain.message.Result<ErrorEvent> = _errorEvents
 
     private fun createCompletion(message: Message, model: String) {
         _typingState.value = TypingState.Typing(chatGPTUser)
@@ -46,7 +47,7 @@ class ChatGPTMessageViewModel @Inject constructor(
                 GPTChatRequest(messages = listOf(message.toGPTMessage()), model)
             val result = gptMessageRepository.createCompletion(gptChatRequest)
             if (result != null) {
-                gptMessageRepository.sendStreamMessage(result.toMessage(message.cid)).await()
+                gptMessageRepository.sendStreamMessage(result.toMessage(message)).await()
             } else {
                 _errorEvents.postValue(ErrorEvent.SendMessageError(ErrorCode.NETWORK_FAILED))
             }
@@ -60,7 +61,7 @@ class ChatGPTMessageViewModel @Inject constructor(
             val gptChatRequestVision: GPTChatRequestVision = GPTChatRequestVision(messages = listOf(message.toGPTMessageVision()), model)
             val result = gptMessageRepository.createCompletion(gptChatRequestVision)
             if (result != null) {
-                gptMessageRepository.sendStreamMessage(result.toMessage(message.cid)).await()
+                gptMessageRepository.sendStreamMessage(result.toMessage(message)).await()
             } else {
                 _errorEvents.postValue(ErrorEvent.SendMessageError(ErrorCode.NETWORK_FAILED))
             }
@@ -103,9 +104,12 @@ class ChatGPTMessageViewModel @Inject constructor(
     fun checkIsEmptyMessage(cid: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = gptMessageRepository.watchIsChannelMessageEmpty(cid).await()
-                result.onSuccessSuspend {
-                   _isMessageEmpty.postValue(it.messages.isEmpty())
+                gptMessageRepository.watchIsChannelMessageEmpty(cid) { channel ->
+                    if (channel != null) {
+                        _isMessageEmpty.postValue(channel.messages.isEmpty())
+                    } else {
+                        //todo 错误处理
+                    }
                 }
             }
 

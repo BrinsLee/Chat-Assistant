@@ -2,36 +2,22 @@ package com.brins.gpt.fragment
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import com.brins.gpt.R
-import com.brins.gpt.databinding.FragmentChatMessageBinding
-import com.brins.gpt.viewmodel.ChatGPTMessageViewModel
 import com.brins.gpt.widget.GPT3MessageComposerLeadingContent
 import com.brins.gpt.widget.GPT3MessageComposerTrailingContent
 import com.brins.gpt.widget.GPT4MessageComposerLeadingContent
 import com.brins.gpt.widget.GPT4MessageComposerTrailingContent
-import com.brins.lib_base.base.BaseFragment
-import com.brins.lib_base.extensions.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import io.getstream.chat.android.client.ChatClient
-import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.ui.common.state.messages.Edit
 import io.getstream.chat.android.ui.common.state.messages.MessageMode
 import io.getstream.chat.android.ui.common.state.messages.Reply
-import io.getstream.chat.android.ui.viewmodel.messages.MessageComposerViewModel
-import io.getstream.chat.android.ui.viewmodel.messages.MessageListHeaderViewModel
-import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModel
-import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModelFactory
 import io.getstream.chat.android.ui.viewmodel.messages.bindView
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
+class ChatMessageFragment : BaseChatFragment() {
 
-    private val arguments by navArgs<ChatMessageFragmentArgs>()
+    /*private val arguments by navArgs<ChatMessageFragmentArgs>()
 
     private lateinit var mBinding: FragmentChatMessageBinding
 
@@ -39,7 +25,7 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
 
     private var mMessageId: String? = null
 
-    private val factory: MessageListViewModelFactory by lazy(LazyThreadSafetyMode.NONE) {
+    private val messageListViewModelFactory: MessageListViewModelFactory by lazy(LazyThreadSafetyMode.NONE) {
         MessageListViewModelFactory(
             context = requireContext().applicationContext,
             cid = mChannelId,
@@ -47,33 +33,35 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
         )
     }
 
-    private val messageSenderViewModel: ChatGPTMessageViewModel by viewModels()
+//    private val messageSenderViewModel: ChatGPTMessageViewModel by viewModels()
 
-    private val messageListViewModel: MessageListViewModel by viewModels { factory }
+    private val messageSenderViewModel: ChatGPTMessageViewModel by lazy { (requireActivity() as MainActivity).getMessageSenderViewModel()  }
 
-    private val messageListHeaderViewModel: MessageListHeaderViewModel by viewModels { factory }
+    private val messageListViewModel: MessageListViewModel by viewModels { messageListViewModelFactory }
 
-    private val messageComposerViewModel: MessageComposerViewModel by viewModels { factory }
+    private val messageListHeaderViewModel: MessageListHeaderViewModel by viewModels { messageListViewModelFactory }
 
-    private lateinit var mChannel: Channel
+    private val messageComposerViewModel: MessageComposerViewModel by viewModels { messageListViewModelFactory }
+
+    private lateinit var mChannel: Channel*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mChannelId = arguments.extraChannelId
-        mMessageId = arguments.extraMessageId
+        /*mChannelId = arguments.extraChannelId
+        mMessageId = arguments.extraMessageId*/
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding = FragmentChatMessageBinding.bind(view)
-        setUpMessageListHeader()
-        setUpMessageList()
-        setUpMessageComposerView()
-        observerStateAndEvents()
+//        mBinding = FragmentChatMessageBinding.bind(view)
+//        setUpMessageListHeader()
+//        setUpMessageList()
+//        setUpMessageComposerView()
+//        observerStateAndEvents()
         messageSenderViewModel.checkIsEmptyMessage(mChannelId)
     }
 
-    private fun setUpMessageComposerView() {
+    override fun setupMessageComposerView() {
         // todo 根据是否付费判断是否展示附件按钮
         if (false) {
             mBinding.messageComposerView.setLeadingContent(GPT3MessageComposerLeadingContent(requireContext()))
@@ -85,8 +73,10 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
         messageComposerViewModel.apply {
             bindView(mBinding.messageComposerView, viewLifecycleOwner, sendMessageButtonClickListener = {
                 message ->
-                messageComposerViewModel.sendMessage(message){ sentMessage->
+                // 自己发送的信息
+                messageComposerViewModel.sendMessage(message.copy(extraData = mChannel.extraData)){ sentMessage->
                     if (sentMessage.isSuccess) {
+                        //发送成功后调用openai
                         messageSenderViewModel.sendStreamChatMessage(sentMessage.getOrNull()!!, mChannel,true)
                     }
                 }
@@ -117,13 +107,13 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
         }
     }
 
-    private fun setUpMessageList() {
+/*    private fun setUpMessageList() {
         with(mBinding.messageListView) {
           messageListViewModel.bindView(this, viewLifecycleOwner)
         }
-    }
+    }*/
 
-    private fun setUpMessageListHeader() {
+    /*private fun setUpMessageListHeader() {
         with(mBinding.messageListHeaderView) {
             messageListHeaderViewModel.bindView(this, viewLifecycleOwner)
             setBackButtonClickListener {
@@ -131,38 +121,18 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
                 popBackStack()
             }
         }
-    }
+    }*/
 
-    private fun observerStateAndEvents() {
+    override fun observerStateAndEvents() {
+        super.observerStateAndEvents()
         messageSenderViewModel.isMessageEmpty.observe(viewLifecycleOwner) { isMessageEmpty ->
             if (isMessageEmpty) {
                 messageSenderViewModel.sendStreamChatMessage(mChannelId, getString(R.string.toast_hello), false)
             }
         }
 
-        messageSenderViewModel.typingState.observe(viewLifecycleOwner) { typingState ->
-            when(typingState) {
-                is ChatGPTMessageViewModel.TypingState.Typing -> {
-                    mBinding.messageListHeaderView.showTypingStateLabel(listOf(typingState.user))
-                }
-                is ChatGPTMessageViewModel.TypingState.Normal -> {
-                    mBinding.messageListHeaderView.showTypingStateLabel(listOf())
-                }
 
-            }
-        }
-
-        messageListViewModel.channel.observe(viewLifecycleOwner) {
-            mChannel = it
-        }
-
-        messageSenderViewModel.errorEvents.observe(viewLifecycleOwner) {
-            requireContext().showToast(R.string.error_network_failure)
-        }
     }
 
-    companion object {
-        const val EXTRA_CHANNEL_ID = "extra_channel_id"
-        const val EXTRA_MESSAGE_ID = "extra_message_id"
-    }
+
 }

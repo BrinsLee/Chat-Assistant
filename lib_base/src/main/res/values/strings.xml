@@ -13,4 +13,7 @@
     <!--default vision prompt-->
     <string name="default_vision_prompts">What are in these images? Is there any difference between them?</string>
     <string name="default_vision_prompt">What’s in this image?</string>
+    <string name="gpt_3_5">GPT-3.5</string>
+    <string name="gpt_4">GPT-4</string>
+    <string name="dall_picture_generation">Dall-e Picture generation</string>
 </resources>

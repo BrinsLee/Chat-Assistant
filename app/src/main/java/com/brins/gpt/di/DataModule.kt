@@ -1,9 +1,11 @@
 package com.brins.gpt.di
 
 import com.brins.gpt.repository.GPTChannelRepositoryImpl
+import com.brins.gpt.repository.GPTImageRepositoryImpl
 import com.brins.gpt.repository.GPTUserInfoRepositoryImpl
 import com.brins.gpt.repository.GPTMessageRepositoryImpl
 import com.brins.gpt.repository.IGPTChannelRepository
+import com.brins.gpt.repository.IGPTImageRepository
 import com.brins.gpt.repository.IGPTUserInfoRepository
 import com.brins.gpt.repository.IGPTMessageRepository
 import dagger.Binds
@@ -26,4 +28,6 @@ interface DataModule {
     @Binds
     fun bindGPTChannelRepository(gptChannelRepositoryImpl: GPTChannelRepositoryImpl): IGPTChannelRepository
 
+    @Binds
+    fun bindGPTImageRepository(gptImageRepositoryImpl: GPTImageRepositoryImpl): IGPTImageRepository
 }
