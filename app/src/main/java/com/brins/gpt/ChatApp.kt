@@ -25,6 +25,8 @@ import io.getstream.chat.android.state.plugin.factory.StreamStatePluginFactory
 import io.getstream.chat.android.ui.ChatUI
 import io.getstream.log.streamLog
 import io.getstream.result.call.Call
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.random.Random
@@ -52,9 +54,14 @@ class ChatApp : Application() {
     override fun onCreate() {
         super.onCreate()
         AppUtils.init(this)
+        initLeakCanary()
         initFormatter()
         initMMKV()
         initStreamChat()
+    }
+
+    private fun initLeakCanary() {
+        LeakCanary.config = LeakCanary.config.copy(retainedVisibleThreshold = 3)
     }
 
     private fun initFormatter() {

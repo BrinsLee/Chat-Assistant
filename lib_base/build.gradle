@@ -96,4 +96,7 @@ dependencies {
     api "com.github.chrisbanes:PhotoView:$photoview_version"
     api "com.kunminx.arch:unpeek-livedata:$unpeek_livedata_version"
 
+    debugApi "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
+
+
 }

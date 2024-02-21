@@ -63,9 +63,12 @@ open class BaseChatFragment: BaseFragment(R.layout.fragment_chat_message) {
         super.onViewCreated(view, savedInstanceState)
         mBinding = FragmentChatMessageBinding.bind(view)
         setupMessageListHeader()
-        setupMessageList()
         setupMessageComposerView()
-        observerStateAndEvents()
+        mBinding.root.postDelayed({
+            setupMessageList()
+            observerStateAndEvents()
+        }, 500)
+
     }
 
     private fun setupMessageListHeader() {
