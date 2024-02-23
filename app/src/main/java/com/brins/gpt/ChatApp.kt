@@ -1,6 +1,7 @@
 package com.brins.gpt
 
 import android.app.Application
+import android.content.Context
 import com.brins.lib_base.BuildConfig
 import com.brins.lib_base.config.EXTRA_KEY_USER_DATA
 import com.brins.lib_base.extensions.createUserAvatar
@@ -51,9 +52,13 @@ class ChatApp : Application() {
             private set
     }
 
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        AppUtils.init(this)
+    }
+
     override fun onCreate() {
         super.onCreate()
-        AppUtils.init(this)
         initLeakCanary()
         initFormatter()
         initMMKV()

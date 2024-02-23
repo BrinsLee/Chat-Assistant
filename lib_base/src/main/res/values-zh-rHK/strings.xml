@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="color_scheme">顔色主題</string>
+    <string name="theme">主題</string>
     <string name="color_light">淺色</string>
     <string name="color_dark">暗色</string>
     <string name="color_auto">跟隨系統</string>
@@ -10,5 +11,5 @@
 
     <string name="gpt_3_5">GPT-3.5</string>
     <string name="gpt_4">GPT-4</string>
-    <string name="dall_picture_generation">Dall-e 圖像生產</string>
+    <string name="dall_picture_generation">DALL•E 圖像生產</string>
 </resources>

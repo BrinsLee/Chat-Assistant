@@ -16,6 +16,9 @@
     <string name="error_network_failure">Network connection failed, please try again later</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="chatGPT">ChatGPT</string>
+    <string name="dall_e">DALL•E</string>
+    <string name="pref_language_name">Select language</string>
 
 
 </resources>

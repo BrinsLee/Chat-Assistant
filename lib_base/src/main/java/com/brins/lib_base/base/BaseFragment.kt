@@ -14,10 +14,10 @@ import dagger.hilt.android.AndroidEntryPoint
 abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout) {
 
     protected val loadingDialog: LoadingDialog by lazy { LoadingDialog.createLoading() }
-    protected val colorSchemeDialog: ColorSchemeDialog by lazy { ColorSchemeDialog.createColorSchemeDialog(resources.getStringArray(R.array.color_theme_name),
-        ContextCompat.getString(requireContext(), R.string.color_scheme), ::onColorSelected) }
+/*    protected val colorSchemeDialog: ColorSchemeDialog by lazy { ColorSchemeDialog.createColorSchemeDialog(resources.getStringArray(R.array.pref_general_theme_list_titles),
+        ContextCompat.getString(requireContext(), R.string.color_scheme), ::onColorSelected) }*/
 
-    protected fun showChangeColorSchemeDialog() {
+    /*protected fun showChangeColorSchemeDialog() {
         if (!colorSchemeDialog.isAdded) {
             colorSchemeDialog.show(requireActivity().supportFragmentManager, "colorSchemeDialog")
         }
@@ -27,7 +27,7 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout) {
         if (colorSchemeDialog.isAdded) {
             colorSchemeDialog.dismiss()
         }
-    }
+    }*/
 
     protected fun showLoadingDialog() {
         if (!loadingDialog.isAdded) {
@@ -51,24 +51,17 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout) {
 
     }
 
-    protected fun popBackStack() {
-        findNavController().popBackStack()
+    protected fun navigateTo(id: Int) {
+        val options = NavOptions.Builder()
+            .setEnterAnim(R.anim.scale_fragment_open_enter)
+            .setExitAnim(R.anim.scale_fragment_open_exit)
+            .setPopEnterAnim(R.anim.scale_fragment_close_enter)
+            .setPopExitAnim(R.anim.scale_fragment_close_exit).build()
+        findNavController().navigate(id, null, options, null)
+
     }
 
-    protected fun onColorSelected(color: String) {
-        context?.let {
-            when(color) {
-                ContextCompat.getString(it, R.string.color_auto) -> {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                }
-                ContextCompat.getString(it, R.string.color_light) -> {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                }
-                ContextCompat.getString(it, R.string.color_dark) -> {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                }
-            }
-        }
-
+    protected fun popBackStack() {
+        findNavController().popBackStack()
     }
 }

@@ -22,6 +22,7 @@ buildscript {
         photoview_version = "2.3.0"
         unpeek_livedata_version = "7.8.0"
         leak_canary_version = "2.9.1"
+        preference_version = '1.2.0'
     }
     dependencies {
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"

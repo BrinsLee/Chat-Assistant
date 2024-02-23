@@ -11,7 +11,7 @@ const val API_KEY = BuildConfig.API_KEY
 
 const val MESSAGE_CHANNEL_NAME_PREFIX = "GPT-"
 
-const val IMAGE_CHANNEL_NAME_PREFIX = "Dall-e"
+const val IMAGE_CHANNEL_NAME_PREFIX = "DALL•E"
 
 const val GPT_MESSAGE_KEY = "ChatGpt"
 
@@ -69,6 +69,10 @@ val chatGPTUser = User(
  */
 const val EXTRA_KEY_USER_DATA: String = "extra_key_user_data" //用户数据
 
-
+/**
+ * setting
+ */
+const val LANGUAGE_NAME = "language_name"
+const val GENERAL_THEME = "general_theme"
 
 

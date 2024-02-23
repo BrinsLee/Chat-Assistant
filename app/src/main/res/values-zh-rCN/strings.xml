@@ -14,6 +14,8 @@
     <string name="channel_list_delete_confirmation_positive_button">删除</string>
     <string name="channel_list_delete_confirmation_negative_button">取消</string>
     <string name="error_network_failure">网络连接失败，请稍后重试</string>
+    <string name="dall_e">DALL•E</string>
+    <string name="pref_language_name">选择语言</string>
 
 
 </resources>

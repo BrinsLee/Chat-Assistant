@@ -4,7 +4,8 @@
     <string name="more">More</string>
     <string name="disconnected" tools:ignore="ExtraTranslation">Disconnected</string>
     <string name="waiting_for_network" tools:ignore="ExtraTranslation">Waiting for network</string>
-    <string name="color_scheme">Color Scheme</string>
+    <string name="color_scheme">App Theme</string>
+    <string name="theme">Theme</string>
     <!--    color theme-->
     <string name="color_light">light</string>
     <string name="color_dark">dark</string>
@@ -15,5 +16,5 @@
     <string name="default_vision_prompt">What’s in this image?</string>
     <string name="gpt_3_5">GPT-3.5</string>
     <string name="gpt_4">GPT-4</string>
-    <string name="dall_picture_generation">Dall-e Picture generation</string>
+    <string name="dall_picture_generation">DALL•E Picture generation</string>
 </resources>

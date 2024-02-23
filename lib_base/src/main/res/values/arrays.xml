@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="color_theme_name">
+    <string-array name="pref_general_theme_list_titles">
         <item>@string/color_light</item>
         <item>@string/color_dark</item>
         <item>@string/color_auto</item>
+    </string-array>
+
+    <string-array name="pref_general_theme_list_values">
+        <item>light</item>
+        <item>dark</item>
+        <item>auto</item>
     </string-array>
 </resources>

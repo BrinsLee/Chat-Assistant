@@ -34,14 +34,14 @@
             app:streamUiSearchInputViewClearInputIcon="@drawable/ic_close"
             tools:visibility="visible" />
 
-        <io.getstream.chat.android.ui.feature.channels.list.ChannelListView
+        <!--<io.getstream.chat.android.ui.feature.channels.list.ChannelListView
             android:id="@+id/channel_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/channelListHeader"
-            tools:listitem="@layout/item_user" />
+            tools:listitem="@layout/item_user" />-->
 
         <io.getstream.chat.android.ui.feature.search.list.SearchResultListView
             android:id="@+id/searchResultListView"
@@ -64,14 +64,31 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:itemIconTint="@color/stream_ui_grey"
+        style="@style/NavigationViewMenuItemStyle"
         app:menu="@menu/menu_navigation_drawer">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_marginTop="@dimen/spacing_200dp"
             android:orientation="vertical">
+            <View
+                android:id="@+id/separator"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/stream_ui_divider_height"
+                android:background="@drawable/stream_ui_divider"
+                android:layout_marginHorizontal="@dimen/spacing_10dp"
+                />
 
+            <io.getstream.chat.android.ui.feature.channels.list.ChannelListView
+                android:id="@+id/channel_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:streamUiChannelSimpleStyle="true"
+                app:streamUiChannelTitleMarginStart="@dimen/spacing_18dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_user" />
+<!--
             <TextView
                 android:id="@+id/signOutTextView"
                 android:layout_width="match_parent"
@@ -86,6 +103,7 @@
                 android:textColor="@color/stream_ui_text_color_primary"
                 app:drawableStartCompat="@drawable/ic_user"
                 app:drawableTint="@color/stream_ui_grey" />
+-->
 
 
             <!--<com.google.android.material.textview.MaterialTextView

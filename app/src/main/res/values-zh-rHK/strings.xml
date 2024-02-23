@@ -13,6 +13,7 @@
     <string name="channel_list_delete_confirmation_positive_button">刪除</string>
     <string name="channel_list_delete_confirmation_negative_button">取消</string>
     <string name="error_network_failure">網絡鏈接失敗，請稍後重試</string>
-
+    <string name="dall_e">DALL•E</string>
+    <string name="pref_language_name">選擇語言</string>
 
 </resources>

@@ -3,6 +3,7 @@ package com.brins.gpt.fragment
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
@@ -67,6 +68,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private lateinit var userAvatarView: UserAvatarView
     private lateinit var nameTextView: TextView
+    private lateinit var settingView: ImageView
 
     companion object {
         val TAG = HomeFragment::class.simpleName
@@ -84,8 +86,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         setupChannelListHeader()
         setupSearchInput()
         setupSearchResultList()
-        setupChannelViews()
         setupNavigationDrawer()
+        setupChannelViews()
         observerStateAndEvents()
         mUserInfoViewModel.fetchUserInfo()
     }
@@ -197,7 +199,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private fun setupNavigationDrawer() {
         AppBarConfiguration(
-            setOf(R.id.changeColor, R.id.changeLanguage), mBinding.drawerLayout
+            setOf(R.id.chatGpt, R.id.dall_e), mBinding.drawerLayout
         )
         mBinding.drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -221,16 +223,33 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         val head = mBinding.navigationView.getHeaderView(0)
         userAvatarView = head.findViewById(R.id.userAvatarView)
         nameTextView = head.findViewById(R.id.nameTextView)
+        settingView = head.findViewById(R.id.setting)
+        settingView.setOnClickListener {
+            navigateTo(R.id.settingFragment, bundleOf())
+        }
+
+        val menu = mBinding.navigationView.menu
+        menu.findItem(R.id.chatGpt).actionView?.apply {
+            val imageView: ImageView = findViewById(R.id.menuImageView)
+            imageView.setImageResource(R.drawable.ic_chat_gpt)
+            val textView: TextView = findViewById(R.id.nameTextView)
+            textView.setText(R.string.chatGPT)
+        }
+        menu.findItem(R.id.dall_e).actionView?.apply {
+            val imageView: ImageView = findViewById(R.id.menuImageView)
+            imageView.setImageResource(R.drawable.ic_dall_e)
+            val textView: TextView = findViewById(R.id.nameTextView)
+            textView.setText(R.string.dall_e)
+        }
+
         mBinding.navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.changeColor -> {
-                    // todo 更改颜色
-                    showChangeColorSchemeDialog()
+                R.id.chatGpt -> {
+//                    showChangeColorSchemeDialog()
                     true
                 }
 
-                R.id.changeLanguage -> {
-                    // todo 更改语言
+                R.id.dall_e -> {
                     true
                 }
 
@@ -240,10 +259,10 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             }
         }
 
-        mBinding.signOutTextView.setOnClickListener {
+        /*mBinding.signOutTextView.setOnClickListener {
             //todo 退出登录
             activity?.finish()
-        }
+        }*/
     }
 
     private fun observerStateAndEvents() {

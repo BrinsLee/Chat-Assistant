@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_50dp"
+    android:paddingHorizontal="@dimen/spacing_small"
+    >
+
+    <io.getstream.chat.android.ui.widgets.avatar.UserAvatarView
+        android:id="@+id/menuImageView"
+        style="@style/StreamUiMenuAvatarStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white"
+        tools:src="@tools:sample/avatars"
+        />
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/spacing_medium"
+        android:paddingEnd="@dimen/spacing_medium"
+        android:text=""
+        android:textDirection="locale"
+        android:textColor="@color/stream_ui_text_color_primary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="@tools:sample/full_names"
+        />
+
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="nameTextView"
+        app:flow_lastVerticalStyle="packed"
+        app:flow_maxElementsWrap="1"
+        app:flow_wrapMode="chain"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/menuImageView"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
