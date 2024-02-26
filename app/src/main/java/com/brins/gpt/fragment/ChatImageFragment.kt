@@ -3,11 +3,13 @@ package com.brins.gpt.fragment
 import android.os.Bundle
 import android.view.View
 import com.brins.gpt.R
+import com.brins.gpt.databinding.CommonEmptyMessageViewBinding
 import com.brins.gpt.widget.DallEMessageComposerLeadingContent
 import dagger.hilt.android.AndroidEntryPoint
 import io.getstream.chat.android.ui.common.state.messages.Edit
 import io.getstream.chat.android.ui.common.state.messages.MessageMode
 import io.getstream.chat.android.ui.common.state.messages.Reply
+import io.getstream.chat.android.ui.feature.messages.list.MessageListView
 import io.getstream.chat.android.ui.viewmodel.messages.bindView
 import io.getstream.log.StreamLog
 
@@ -22,6 +24,12 @@ class ChatImageFragment : BaseChatFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         imageMessageSenderViewModel.checkIsEmptyMessage(mChannelId)
+    }
+
+    override fun setupEmptyMessageView(messageListView: MessageListView) {
+        val binding: CommonEmptyMessageViewBinding = CommonEmptyMessageViewBinding.inflate(layoutInflater)
+        binding.userAvatarView.setImageResource(R.drawable.ic_dall_e)
+        messageListView.setEmptyStateView(binding.root)
     }
 
     override fun setupMessageComposerView() {

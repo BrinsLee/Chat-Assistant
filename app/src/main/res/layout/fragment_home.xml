@@ -34,6 +34,13 @@
             app:streamUiSearchInputViewClearInputIcon="@drawable/ic_close"
             tools:visibility="visible" />
 
+        <FrameLayout
+            android:id="@+id/flContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/channelListHeader"
+            />
         <!--<io.getstream.chat.android.ui.feature.channels.list.ChannelListView
             android:id="@+id/channel_list"
             android:layout_width="match_parent"
@@ -60,16 +67,13 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/stream_ui_white"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header"
         app:itemIconTint="@color/stream_ui_grey"
-        style="@style/NavigationViewMenuItemStyle"
-        app:menu="@menu/menu_navigation_drawer">
+        style="@style/NavigationViewMenuItemStyle">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="@dimen/spacing_200dp"
             android:orientation="vertical">
             <View
@@ -83,7 +87,7 @@
             <io.getstream.chat.android.ui.feature.channels.list.ChannelListView
                 android:id="@+id/channel_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 app:streamUiChannelSimpleStyle="true"
                 app:streamUiChannelTitleMarginStart="@dimen/spacing_18dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

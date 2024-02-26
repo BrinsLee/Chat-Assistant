@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * 为Android类添加 @AndroidEntryPoint注解，就可以向其里面的字段添加注入依赖了
  */
 @AndroidEntryPoint
-class MainActivity : com.brins.lib_base.base.BaseActivity() {
+class MainActivity : BaseActivity() {
 
     private val mBinding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 

@@ -5,6 +5,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.brins.lib_base.R
@@ -64,4 +65,20 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout) {
     protected fun popBackStack() {
         findNavController().popBackStack()
     }
+
+    protected fun addFragment(layoutId: Int, fragment: BaseFragment) {
+        childFragmentManager.commit {
+            add(layoutId, fragment)
+            setReorderingAllowed(true)
+        }
+    }
+
+    protected fun replaceFragment(layoutId: Int, fragment: BaseFragment) {
+        childFragmentManager.commit {
+            replace(layoutId, fragment)
+            setReorderingAllowed(true)
+        }
+    }
+
+
 }

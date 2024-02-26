@@ -31,15 +31,40 @@ const val ROLE_ASSISTANT = "assistant"
 const val MODEL_3_5_TURBO = "gpt-3.5-turbo"
 
 const val MODEL_3_5_TURBO_1106 = "gpt-3.5-turbo-1106"
-
+const val MODEL_3_5 = "ChatGPT 3.5"
 // Up to Apr 2023
 const val MODEL_4_1106_PREVIEW = "gpt-4-1106-preview"
+const val MODEL_4 = "ChatGPT 4"
 // vision-preview
 const val MODEL_4_VISION_PREVIEW = "gpt-4-vision-preview"
 // dall-e-3 生成图片
 const val MODEL_DALL_E_3 = "dall-e-3"
+const val MODEL_DALL_E = "DALL•E"
 // dall-e-2 生成图片
 const val MODEL_DALL_E_2 = "dall-e-2"
+
+/**
+ * 语音选项
+ *
+ */
+const val VOICE_ALLOY = "alloy"
+
+const val VOICE_ECHO = "echo"
+
+const val VOICE_FABLE = "fable"
+
+const val VOICE_ONYX = "onyx"
+
+const val VOICE_NOVA = "nova"
+
+const val VOICE_SHIMMER = "shimmer"
+
+/**
+ * 语音模型
+ */
+const val VOICE_MODEL_TTS_1 = "tts-1"
+
+const val VOICE_MODEL_TTS_1_HD = "tts-1-hd"
 
 /**
  * 请求头参数

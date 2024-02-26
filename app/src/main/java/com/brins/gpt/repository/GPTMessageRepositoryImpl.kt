@@ -4,6 +4,7 @@ import com.brins.lib_base.config.GPT_MESSAGE_KEY
 import com.brins.lib_base.config.chatGPTUser
 import com.brins.lib_base.model.GPTChatRequest
 import com.brins.lib_base.model.GPTChatResponse
+import com.brins.lib_base.model.audio.GPTTextToSpeechRequest
 import com.brins.lib_base.model.vision.GPTChatRequestVision
 import com.brins.lib_network.service.IChatGPTService
 import com.brins.lib_network.utils.NetworkUtils
@@ -14,6 +15,7 @@ import javax.inject.Inject
 import io.getstream.result.call.Call
 import io.getstream.result.onErrorSuspend
 import io.getstream.result.onSuccessSuspend
+import okhttp3.ResponseBody
 import java.util.UUID
 
 class GPTMessageRepositoryImpl @Inject constructor(
@@ -124,5 +126,20 @@ class GPTMessageRepositoryImpl @Inject constructor(
         val channelClient = chatClient.channel(message.cid)
         val realSendMessage = message.copy(user = chatGPTUser)
         return channelClient.sendMessage(realSendMessage)
+    }
+
+    override suspend fun messageTextToSpeech(gptTextToSpeechRequest: GPTTextToSpeechRequest): ResponseBody? {
+        val result = networkUtils.safeApiCall {
+            chatGptService.createSpeech(gptTextToSpeechRequest)
+        }
+        return when (result) {
+            is NetworkUtils.Result.Success -> {
+                result.data
+            }
+
+            is NetworkUtils.Result.Error -> {
+                null
+            }
+        }
     }
 }

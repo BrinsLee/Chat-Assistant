@@ -12,4 +12,7 @@
     <string name="gpt_3_5">GPT-3.5</string>
     <string name="gpt_4">GPT-4</string>
     <string name="dall_picture_generation">DALL•E 圖像生產</string>
+
+    <string name="permissions_denied">存取權限被拒。</string>
+    <string name="action_settings">"設定"</string>
 </resources>

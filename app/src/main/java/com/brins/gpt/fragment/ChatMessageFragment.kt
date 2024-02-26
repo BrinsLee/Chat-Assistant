@@ -3,14 +3,16 @@ package com.brins.gpt.fragment
 import android.os.Bundle
 import android.view.View
 import com.brins.gpt.R
+import com.brins.gpt.databinding.CommonEmptyMessageViewBinding
 import com.brins.gpt.widget.GPT3MessageComposerLeadingContent
 import com.brins.gpt.widget.GPT3MessageComposerTrailingContent
 import com.brins.gpt.widget.GPT4MessageComposerLeadingContent
 import com.brins.gpt.widget.GPT4MessageComposerTrailingContent
+import com.brins.lib_base.extensions.isChatGPTChannel
 import dagger.hilt.android.AndroidEntryPoint
-import io.getstream.chat.android.ui.common.state.messages.Edit
 import io.getstream.chat.android.ui.common.state.messages.MessageMode
 import io.getstream.chat.android.ui.common.state.messages.Reply
+import io.getstream.chat.android.ui.feature.messages.list.MessageListView
 import io.getstream.chat.android.ui.viewmodel.messages.bindView
 
 
@@ -46,8 +48,7 @@ class ChatMessageFragment : BaseChatFragment() {
     private lateinit var mChannel: Channel*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        /*mChannelId = arguments.extraChannelId
+        super.onCreate(savedInstanceState)/*mChannelId = arguments.extraChannelId
         mMessageId = arguments.extraMessageId*/
     }
 
@@ -58,36 +59,66 @@ class ChatMessageFragment : BaseChatFragment() {
 //        setUpMessageList()
 //        setUpMessageComposerView()
 //        observerStateAndEvents()
-        messageSenderViewModel.checkIsEmptyMessage(mChannelId)
+//        messageSenderViewModel.checkIsEmptyMessage(mChannelId)
+    }
+
+    override fun setupEmptyMessageView(messageListView: MessageListView) {
+        val binding: CommonEmptyMessageViewBinding =
+            CommonEmptyMessageViewBinding.inflate(layoutInflater)
+        binding.userAvatarView.setImageResource(if (mChannel.isChatGPTChannel()) R.drawable.ic_chat_gpt else R.drawable.ic_dall_e)
+        messageListView.setEmptyStateView(binding.root)
     }
 
     override fun setupMessageComposerView() {
         // todo 根据是否付费判断是否展示附件按钮
         if (false) {
-            mBinding.messageComposerView.setLeadingContent(GPT3MessageComposerLeadingContent(requireContext()))
-            mBinding.messageComposerView.setTrailingContent(GPT3MessageComposerTrailingContent(requireContext()))
+            mBinding.messageComposerView.setLeadingContent(
+                GPT3MessageComposerLeadingContent(
+                    requireContext()
+                )
+            )
+            mBinding.messageComposerView.setTrailingContent(
+                GPT3MessageComposerTrailingContent(
+                    requireContext()
+                )
+            )
         } else {
-            mBinding.messageComposerView.setLeadingContent(GPT4MessageComposerLeadingContent(requireContext()))
-            mBinding.messageComposerView.setTrailingContent(GPT4MessageComposerTrailingContent(requireContext()))
+            mBinding.messageComposerView.setLeadingContent(
+                GPT4MessageComposerLeadingContent(
+                    requireContext()
+                )
+            )
+            mBinding.messageComposerView.setTrailingContent(
+                GPT4MessageComposerTrailingContent(
+                    requireContext()
+                )
+            )
         }
         messageComposerViewModel.apply {
-            bindView(mBinding.messageComposerView, viewLifecycleOwner, sendMessageButtonClickListener = {
-                message ->
-                // 自己发送的信息
-                messageComposerViewModel.sendMessage(message.copy(extraData = mChannel.extraData)){ sentMessage->
-                    if (sentMessage.isSuccess) {
-                        //发送成功后调用openai
-                        messageSenderViewModel.sendStreamChatMessage(sentMessage.getOrNull()!!, mChannel,true)
+            bindView(
+                mBinding.messageComposerView,
+                viewLifecycleOwner,
+                sendMessageButtonClickListener = { message ->
+                    // 自己发送的信息
+                    messageComposerViewModel.sendMessage(message.copy(extraData = mChannel.extraData)) { sentMessage ->
+                        if (sentMessage.isSuccess) {
+                            //发送成功后调用openai
+                            messageSenderViewModel.sendStreamChatMessage(
+                                sentMessage.getOrNull()!!,
+                                mChannel,
+                                true
+                            )
+                        }
                     }
-                }
 
-            })
+                })
             messageListViewModel.mode.observe(viewLifecycleOwner) {
-                when(it) {
+                when (it) {
                     is MessageMode.MessageThread -> {
 //                        headerViewModel.setActiveThread(it.parentMessage)
                         messageComposerViewModel.setMessageMode(MessageMode.MessageThread(it.parentMessage))
                     }
+
                     is MessageMode.Normal -> {
                         messageComposerViewModel.leaveThread()
                     }
@@ -96,9 +127,11 @@ class ChatMessageFragment : BaseChatFragment() {
             mBinding.messageListView.setMessageReplyHandler { _, message ->
                 messageComposerViewModel.performMessageAction(Reply(message))
             }
-            mBinding.messageListView.setMessageEditHandler { message ->
-                messageComposerViewModel.performMessageAction(Edit(message))
+
+            mBinding.messageListView.setMessageTextToSpeechHandler { message ->
+                messageSenderViewModel.textToSpeech(requireContext(), message)
             }
+
             mBinding.messageListView.setAttachmentReplyOptionClickHandler { result ->
                 messageListViewModel.getMessageById(result.messageId)?.let { message ->
                     messageComposerViewModel.performMessageAction(Reply(message))
@@ -107,11 +140,11 @@ class ChatMessageFragment : BaseChatFragment() {
         }
     }
 
-/*    private fun setUpMessageList() {
-        with(mBinding.messageListView) {
-          messageListViewModel.bindView(this, viewLifecycleOwner)
-        }
-    }*/
+    /*    private fun setUpMessageList() {
+            with(mBinding.messageListView) {
+              messageListViewModel.bindView(this, viewLifecycleOwner)
+            }
+        }*/
 
     /*private fun setUpMessageListHeader() {
         with(mBinding.messageListHeaderView) {
@@ -126,9 +159,9 @@ class ChatMessageFragment : BaseChatFragment() {
     override fun observerStateAndEvents() {
         super.observerStateAndEvents()
         messageSenderViewModel.isMessageEmpty.observe(viewLifecycleOwner) { isMessageEmpty ->
-            if (isMessageEmpty) {
+            /*if (isMessageEmpty) {
                 messageSenderViewModel.sendStreamChatMessage(mChannelId, getString(R.string.toast_hello), false)
-            }
+            }*/
         }
 
 

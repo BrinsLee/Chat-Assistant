@@ -1,8 +1,7 @@
 package com.brins.gpt.repository
 
 import com.brins.gpt.ChatApp
-import com.brins.lib_base.config.IMAGE_CHANNEL_NAME_PREFIX
-import com.brins.lib_base.config.MESSAGE_CHANNEL_NAME_PREFIX
+import com.brins.lib_base.config.ChatModel
 import com.brins.lib_base.config.MODEL_3_5_TURBO
 import com.brins.lib_base.config.MODEL_3_5_TURBO_1106
 import com.brins.lib_base.config.MODEL_4_1106_PREVIEW
@@ -66,9 +65,9 @@ class GPTChannelRepositoryImpl @Inject constructor(private val chatClient: ChatC
     private fun generateChannelName(model: String): String {
         val builder: StringBuilder = StringBuilder()
         when(model) {
-            MODEL_3_5_TURBO_1106, MODEL_3_5_TURBO -> builder.append(MESSAGE_CHANNEL_NAME_PREFIX).append(3)
-            MODEL_4_1106_PREVIEW, MODEL_4_VISION_PREVIEW -> builder.append(MESSAGE_CHANNEL_NAME_PREFIX).append(4)
-            MODEL_DALL_E_2, MODEL_DALL_E_3 -> builder.append(IMAGE_CHANNEL_NAME_PREFIX)
+            MODEL_3_5_TURBO_1106, MODEL_3_5_TURBO -> builder.append(ChatModel.ChatGPT_3_5_TURBO_1106.simpleName)
+            MODEL_4_1106_PREVIEW, MODEL_4_VISION_PREVIEW -> builder.append(ChatModel.ChatGPT_4_1106_PREVIEW.simpleName)
+            MODEL_DALL_E_2, MODEL_DALL_E_3 -> builder.append(ChatModel.DALL_E_3.simpleName)
         }
         val currentDate = Date()
         val date = ChatApp.dateDefaultFormat.formatDateTime(currentDate)

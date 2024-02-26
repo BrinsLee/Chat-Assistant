@@ -29,6 +29,7 @@ import io.getstream.chat.android.state.plugin.state.querychannels.QueryChannelsS
 import io.getstream.chat.android.ui.feature.channels.list.ChannelListView
 import io.getstream.chat.android.ui.feature.channels.list.adapter.ChannelListItem
 import io.getstream.chat.android.ui.viewmodel.channels.ChannelListViewModel
+import io.getstream.log.streamLog
 import io.getstream.result.Error
 import io.getstream.result.onSuccessSuspend
 import kotlinx.coroutines.Job
@@ -54,8 +55,11 @@ class ChatGPTChannelStateViewModel(
 
     private var queryJob: Job? = null
 
-    private val stateMerger = MediatorLiveData<ChannelState>()
-    val channelState: LiveData<ChannelState> = stateMerger.distinctUntilChanged()
+    private val emptyMessageChannelStateMerger = MediatorLiveData<ChannelState>()
+    val emptyMessageChannelState: LiveData<ChannelState> = emptyMessageChannelStateMerger.distinctUntilChanged()
+
+    private val channelStateMerger = MediatorLiveData<ChannelState>()
+    val channelState: LiveData<ChannelState> = channelStateMerger.distinctUntilChanged()
 
     private val paginationStateMerger = MediatorLiveData<PaginationState>()
     val paginationState: LiveData<PaginationState> = paginationStateMerger.distinctUntilChanged()
@@ -79,7 +83,7 @@ class ChatGPTChannelStateViewModel(
             }
         }
 
-        stateMerger.addSource(filterLiveData) { filter ->
+        channelStateMerger.addSource(filterLiveData) { filter ->
             if (filter != null) {
                 initData(filter)
             }
@@ -91,7 +95,8 @@ class ChatGPTChannelStateViewModel(
      * 初始化数据
      */
     private fun initData(filterObject: FilterObject) {
-        stateMerger.value = INITIAL_STATE
+        streamLog(tag = "HomeFragment") { "ChatGPTChannelStateViewModel initData, ${channelStateMerger.value}" }
+        channelStateMerger.value = INITIAL_STATE
         val queryChannelsRequest = QueryChannelsRequest(
             filter = filterObject,
             querySort = sort,
@@ -115,11 +120,18 @@ class ChatGPTChannelStateViewModel(
                 if (!isActive) {
                     return@collectLatest
                 }
-                stateMerger.addFlow(
+                channelStateMerger.addFlow(
                     queryJob,
                     queryChannelsState.channelsStateData
                 ) { channelState ->
-                    stateMerger.value = handleChannelStateNews(channelState)
+                    streamLog(tag = "HomeFragment") { "ChatGPTChannelStateViewModel queryChannelsState.channelStateMerger, ${channelState}" }
+                    channelStateMerger.value = handleChannelStateNews(channelState)
+                }
+
+                emptyMessageChannelStateMerger.addFlow(queryJob, queryChannelsState.channelsStateData) {
+                        channelState ->
+                    streamLog(tag = "HomeFragment") { "ChatGPTChannelStateViewModel queryChannelsState.emptyMessageChannelStateMerger, ${channelState}" }
+                    emptyMessageChannelStateMerger.value = handleEmptyMessageChannelStateNews(channelState)
                 }
 
                 paginationStateMerger.addFlow(
@@ -183,6 +195,25 @@ class ChatGPTChannelStateViewModel(
         }
     }
 
+    private fun handleEmptyMessageChannelStateNews(
+        channelState: ChannelsStateData,
+    ): ChannelState {
+        return when (channelState) {
+            is ChannelsStateData.NoQueryActive,
+            is ChannelsStateData.Loading,
+            -> ChannelState(isLoading = true, emptyList())
+
+            is ChannelsStateData.OfflineNoResults -> ChannelState(
+                isLoading = false,
+                channels = emptyList(),
+            )
+
+            is ChannelsStateData.Result -> ChannelState(
+                isLoading = false, channels = channelState.channels.filter { it.messages.isEmpty() }
+            )
+        }
+    }
+
     /**
      * 绑定数据与UI
      */
@@ -192,7 +223,7 @@ class ChatGPTChannelStateViewModel(
                 view.setPaginationEnabled(!it.endOfChannels && !it.loadingMore)
             }
 
-            var list: List<ChannelListItem> = channelState?.channels?.map {
+            var list: List<ChannelListItem> = channelState?.channels?.filter { it.messages.isNotEmpty() }?.map {
                 ChannelListItem.ChannelItem(it, emptyList())
             }?: emptyList()
             if (paginationState?.loadingMore == true) {
@@ -200,6 +231,7 @@ class ChatGPTChannelStateViewModel(
             }
             list to (channelState?.isLoading == true)
         }.distinctUntilChanged().observe(lifecycleOwner) { (list, isLoading) ->
+
             when {
                 isLoading && list.isEmpty() -> view.showLoadingView()
                 list.isNotEmpty() -> {
@@ -266,7 +298,7 @@ class ChatGPTChannelStateViewModel(
             channelsMutableUiState.value = CreateChannelState.Loading
             val result = gptChannelRepositoryImpl.createRandomChannel(model).await()
             result.onSuccessSuspend {
-                channelsMutableUiState.value = CreateChannelState.Success(it.id)
+                channelsMutableUiState.value = CreateChannelState.Success(it)
                 delay(100L)
                 channelsMutableUiState.value = CreateChannelState.Nothing
             }.onError {
@@ -330,7 +362,7 @@ class ChatGPTChannelStateViewModel(
 
         object Loading: CreateChannelState
 
-        data class Success(val channelId: String): CreateChannelState
+        data class Success(val channel: Channel): CreateChannelState
 
         object Error: CreateChannelState
     }

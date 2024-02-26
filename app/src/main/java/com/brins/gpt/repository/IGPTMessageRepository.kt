@@ -2,10 +2,12 @@ package com.brins.gpt.repository
 
 import com.brins.lib_base.model.GPTChatRequest
 import com.brins.lib_base.model.GPTChatResponse
+import com.brins.lib_base.model.audio.GPTTextToSpeechRequest
 import com.brins.lib_base.model.vision.GPTChatRequestVision
 import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.models.Message
 import io.getstream.result.call.Call
+import okhttp3.ResponseBody
 
 interface IGPTMessageRepository {
     /**
@@ -39,8 +41,8 @@ interface IGPTMessageRepository {
     suspend fun sendStreamMessage(message: Message): Call<Message>
 
     /**
-     * 发送stream消息
+     * 文本转语音
      */
-//    suspend fun sendStreamMessage(message: Message, isFromMine: Boolean): Call<Message>
+    suspend fun messageTextToSpeech(gptTextToSpeechRequest: GPTTextToSpeechRequest): ResponseBody?
 
 }

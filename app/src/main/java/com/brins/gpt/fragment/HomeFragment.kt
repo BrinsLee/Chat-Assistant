@@ -1,6 +1,7 @@
 package com.brins.gpt.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -30,14 +31,22 @@ import com.brins.lib_base.config.MODEL_4_1106_PREVIEW
 import com.brins.lib_base.config.MODEL_4_VISION_PREVIEW
 import com.brins.lib_base.config.MODEL_DALL_E_2
 import com.brins.lib_base.config.MODEL_DALL_E_3
+import com.brins.lib_base.extensions.getChannelSimpleName
+import com.brins.lib_base.extensions.isChatGPTChannel
+import com.brins.lib_base.extensions.isDallChannel
+import com.brins.lib_base.extensions.isSameChannel
 import com.brins.lib_base.extensions.isVisible
+import com.brins.lib_base.extensions.updatePartial
 import dagger.hilt.android.AndroidEntryPoint
+import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.ui.viewmodel.channels.ChannelListHeaderViewModel
 import io.getstream.chat.android.ui.viewmodel.channels.ChannelListViewModel
 import io.getstream.chat.android.ui.viewmodel.search.SearchViewModel
 import io.getstream.chat.android.ui.viewmodel.search.bindView
 import io.getstream.chat.android.ui.widgets.avatar.UserAvatarView
+import io.getstream.log.StreamLog
 import io.getstream.log.streamLog
+import io.getstream.result.Result
 import kotlinx.coroutines.flow.filterNotNull
 import javax.inject.Inject
 
@@ -70,12 +79,27 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     private lateinit var nameTextView: TextView
     private lateinit var settingView: ImageView
 
+    private lateinit var chatImageFragment: ChatImageFragment
+
+    private lateinit var chatMessageFragment: ChatMessageFragment
+
+    private var currentEmptyChannel: Channel? = null
+    private var currentChannel: Channel? = null
+        set(value) {
+            field = value
+            if (value != null) {
+                chatMessageFragment = BaseChatFragment.createChatMessageInstance(value.cid)
+                setupChatMessageView()
+            }
+        }
+
     companion object {
         val TAG = HomeFragment::class.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initChannelData()
 
     }
 
@@ -90,6 +114,44 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         setupChannelViews()
         observerStateAndEvents()
         mUserInfoViewModel.fetchUserInfo()
+    }
+
+    private fun initChannelData() {
+        mChannelViewModel.emptyMessageChannelState.observe(this) { emptyMessageChannel ->
+            if (!emptyMessageChannel.isLoading) {
+                if (emptyMessageChannel.channels.isEmpty()) {
+                    streamLog { "emptyMessageChannelState isEmpty: ${emptyMessageChannel.channels.isEmpty()}" }
+                    mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEvent3_5())
+                } else {
+                    streamLog { "emptyMessageChannelState isNotEmpty: ${emptyMessageChannel.channels.isNotEmpty()}" }
+                    val isInitialize = (currentEmptyChannel == null)
+                    if (currentEmptyChannel == null || !emptyMessageChannel.channels[0].isSameChannel(currentEmptyChannel!!)) {
+                        streamLog { "emptyMessageChannelState setupEmptyChannel: ${currentEmptyChannel} vs ${emptyMessageChannel.channels[0]}" }
+                        currentEmptyChannel = emptyMessageChannel.channels[0]
+                        if (isInitialize) {
+                            selectChatGPTChannel()
+                        }
+                    }
+
+                    /*chatMessageFragment = BaseChatFragment.createChatMessageInstance(emptyMessageChannel.channels[0].cid)
+                    setupChatMessageView()*/
+                }
+            }
+            /*if (emptyMessageChannel.channels.isEmpty()) {
+                mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEvent3_5())
+            } else {
+                chatMessageFragment = BaseChatFragment.createChatMessageInstance(emptyMessageChannel.channels[0].cid)
+                setupChatMessageView()
+            }*/
+        }
+    }
+
+    private fun setupChatMessageView() {
+        currentChannel?.apply {
+            val titleName = getChannelSimpleName()
+            mBinding.channelListHeader.showOnlineTitle(titleName)
+        }
+        replaceFragment(R.id.flContainer, chatMessageFragment)
     }
 
     private fun setupSearchInput() {
@@ -229,11 +291,15 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         }
 
         val menu = mBinding.navigationView.menu
-        menu.findItem(R.id.chatGpt).actionView?.apply {
-            val imageView: ImageView = findViewById(R.id.menuImageView)
-            imageView.setImageResource(R.drawable.ic_chat_gpt)
-            val textView: TextView = findViewById(R.id.nameTextView)
-            textView.setText(R.string.chatGPT)
+        menu.findItem(R.id.chatGpt)?.apply {
+            isChecked = true
+            actionView?.apply {
+                val imageView: ImageView = findViewById(R.id.menuImageView)
+                imageView.setImageResource(R.drawable.ic_chat_gpt)
+                val textView: TextView = findViewById(R.id.nameTextView)
+                textView.setText(R.string.chatGPT)
+            }
+
         }
         menu.findItem(R.id.dall_e).actionView?.apply {
             val imageView: ImageView = findViewById(R.id.menuImageView)
@@ -246,10 +312,14 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             when (item.itemId) {
                 R.id.chatGpt -> {
 //                    showChangeColorSchemeDialog()
+                    selectChatGPTChannel()
+                    mBinding.drawerLayout.closeDrawers()
                     true
                 }
 
                 R.id.dall_e -> {
+                    selectDallChannel()
+                    mBinding.drawerLayout.closeDrawers()
                     true
                 }
 
@@ -258,11 +328,47 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                 }
             }
         }
-
+        selectChatGPTChannel()
         /*mBinding.signOutTextView.setOnClickListener {
             //todo 退出登录
             activity?.finish()
         }*/
+    }
+
+    private fun selectDallChannel() {
+        currentEmptyChannel?.let {
+            if (it.isDallChannel()) {
+                if (!it.isSameChannel(currentChannel)) {
+                    currentChannel = currentEmptyChannel
+                }
+                return
+            } else {
+                it.updatePartial(mapOf("model" to MODEL_DALL_E_3)) { result ->
+                    result.onSuccess { value ->
+                        currentEmptyChannel = value
+                        currentChannel = value
+                    }
+                }
+            }
+        }
+    }
+
+    private fun selectChatGPTChannel() {
+        currentEmptyChannel?.let {
+            if (it.isChatGPTChannel()) {
+                if (!it.isSameChannel(currentChannel)) {
+                    currentChannel = currentEmptyChannel
+                }
+                return
+            } else {
+                it.updatePartial(mapOf("model" to MODEL_4_1106_PREVIEW)) { result ->
+                    result.onSuccess { value ->
+                        currentEmptyChannel = value
+                        currentChannel = value
+                    }
+                }
+            }
+        }
     }
 
     private fun observerStateAndEvents() {
@@ -297,12 +403,16 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         }
 
         mChannelViewModel.channelUiState.filterNotNull().asLiveData().observe(viewLifecycleOwner) { data ->
-            streamLog(tag = TAG) {
-                data.toString()
+            if (data is ChatGPTChannelStateViewModel.CreateChannelState.Success) {
+                streamLog(tag = TAG) {
+                    data.channel.cid
+                }
             }
 
-
-
+            /*if (data is ChatGPTChannelStateViewModel.CreateChannelState.Success) {
+                chatMessageFragment = BaseChatFragment.createChatMessageInstance(data.channelId)
+                setupChatMessageView()
+            }*/
         }
     }
 
@@ -310,7 +420,11 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         with(mBinding.channelList) {
             mChannelViewModel.bindView(this, viewLifecycleOwner)
             setChannelItemClickListener { channel ->
-                when (channel.extraData["model"]) {
+                if (!channel.isSameChannel(currentChannel)) {
+                    currentChannel = channel
+                }
+                mBinding.drawerLayout.closeDrawers()
+                /*when (channel.extraData["model"]) {
                     MODEL_3_5_TURBO, MODEL_3_5_TURBO_1106, MODEL_4_1106_PREVIEW, MODEL_4_VISION_PREVIEW -> {
                         navigateTo(R.id.chatMessageFragment, bundleOf(BaseChatFragment.EXTRA_CHANNEL_ID to channel.cid))
                     }
@@ -320,7 +434,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                     else -> {
                         navigateTo(R.id.chatMessageFragment, bundleOf(BaseChatFragment.EXTRA_CHANNEL_ID to channel.cid))
                     }
-                }
+                }*/
 
             }
         }

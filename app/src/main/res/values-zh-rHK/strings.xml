@@ -15,5 +15,5 @@
     <string name="error_network_failure">網絡鏈接失敗，請稍後重試</string>
     <string name="dall_e">DALL•E</string>
     <string name="pref_language_name">選擇語言</string>
-
+    <string name="ui_message_list_text_to_speech">轉換語音</string>
 </resources>

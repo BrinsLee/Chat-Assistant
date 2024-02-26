@@ -1,8 +1,10 @@
 package com.brins.lib_base.extensions
 
+import android.app.Activity
 import android.graphics.Color
 import android.os.Build
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
@@ -142,3 +144,5 @@ fun AppCompatActivity.setLightStatusBar(enabled: Boolean) {
         }
     }
 }
+
+inline val Activity.rootView: View get() = findViewById<ViewGroup>(android.R.id.content).getChildAt(0)

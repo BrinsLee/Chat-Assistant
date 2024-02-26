@@ -119,12 +119,18 @@ class ChannelListHeaderView @JvmOverloads constructor(
         binding.userAvatarView.setUser(user)
     }
 
-    fun showOnlineTitle() {
+    fun showOnlineTitle(string: String) {
+        binding.onlineTextView.text = string
+    }
+
+    fun hideOfflineTitle() {
         binding.offlineTitleContainer.isVisible = false
+        binding.onlineTitleContainer.isVisible = true
     }
 
     fun showOfflineTitle() {
         binding.offlineTitleContainer.isVisible = true
+        binding.onlineTitleContainer.isVisible = false
         binding.offlineProgressBar.isVisible = false
         binding.offlineTextView.isVisible = true
         binding.offlineTextView.text = context.getString(R.string.disconnected)
@@ -132,6 +138,7 @@ class ChannelListHeaderView @JvmOverloads constructor(
 
     fun showConnectingTitle() {
         binding.offlineTitleContainer.isVisible = true
+        binding.onlineTitleContainer.isVisible = false
         binding.offlineProgressBar.isVisible = true
 
         binding.offlineTextView.text = resources.getString(R.string.waiting_for_network)

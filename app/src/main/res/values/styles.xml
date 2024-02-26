@@ -25,6 +25,10 @@
     <style name="NavigationViewMenuItemStyle" parent="Widget.Design.NavigationView">
         <item name="itemHorizontalPadding">@dimen/spacing_10dp</item>
         <item name="itemRippleColor">@null</item>
+        <item name="itemBackground">@drawable/common_selector_bg</item>
+        <item name="headerLayout">@layout/nav_header</item>
+        <item name="menu">@menu/menu_navigation_drawer</item>
+        <item name="android:background">@color/stream_ui_white</item>
     </style>
 
 </resources>

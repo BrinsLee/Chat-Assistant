@@ -19,6 +19,7 @@
     <string name="chatGPT">ChatGPT</string>
     <string name="dall_e">DALL•E</string>
     <string name="pref_language_name">Select language</string>
+    <string name="ui_message_list_text_to_speech">Listen</string>
 
 
 </resources>

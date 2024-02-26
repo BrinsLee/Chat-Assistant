@@ -3,13 +3,17 @@ package com.brins.lib_network.service
 import com.brins.lib_base.model.GPTChatRequest
 import com.brins.lib_base.model.GPTChatResponse
 import com.brins.lib_base.model.OpenAIReuqest
+import com.brins.lib_base.model.audio.GPTTextToSpeechRequest
 import com.brins.lib_base.model.image.GPTImageRequest
 import com.brins.lib_base.model.image.GPTImageResponse
 import com.brins.lib_base.model.vision.GPTChatRequestVision
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Streaming
 
 interface IChatGPTService {
     @Headers(
@@ -41,4 +45,12 @@ interface IChatGPTService {
      */
     @POST("v1/images/generations")
     suspend fun createImage(@Body body: GPTImageRequest): Response<GPTImageResponse>
+
+
+    /**
+     * 文字转语音接口
+     */
+    @Streaming
+    @POST("/v1/audio/speech")
+    suspend fun createSpeech(@Body body: GPTTextToSpeechRequest): Response<ResponseBody>
 }

@@ -7,13 +7,13 @@
     tools:context=".fragment.ChatMessageFragment">
 
 
-    <io.getstream.chat.android.ui.feature.messages.header.MessageListHeaderView
+<!--    <io.getstream.chat.android.ui.feature.messages.header.MessageListHeaderView
         android:id="@+id/messageListHeaderView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
     <io.getstream.chat.android.ui.feature.messages.list.MessageListView
         android:id="@+id/messageListView"
@@ -23,9 +23,15 @@
         app:layout_constraintBottom_toTopOf="@+id/messageComposerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messageListHeaderView"
+        app:layout_constraintTop_toTopOf="parent"
         app:streamUiFlagMessageConfirmationEnabled="false"
-        app:streamUiPinMessageEnabled="false" />
+        app:streamUiPinMessageEnabled="false"
+        app:streamUiDeleteMessageEnabled="false"
+        app:streamUiDeleteConfirmationEnabled="false"
+        app:streamUiThreadsEnabled="false"
+        app:streamUiMarkAsUnreadEnabled="false"
+        app:streamUiEditMessageEnabled="false"
+        />
 
     <io.getstream.chat.android.ui.feature.messages.composer.MessageComposerView
         android:id="@+id/messageComposerView"
