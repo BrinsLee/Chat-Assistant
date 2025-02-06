@@ -50,6 +50,12 @@ fun Channel.getChannelSimpleName(): String {
         ChatModel.DALL_E_2.modelName, ChatModel.DALL_E_3.modelName -> {
             ChatModel.DALL_E_3.simpleName
         }
+        ChatModel.DEEP_SEEK_R1.modelName -> {
+            ChatModel.DEEP_SEEK_R1.simpleName
+        }
+        ChatModel.DEEP_SEEK_V3.modelName -> {
+            ChatModel.DEEP_SEEK_V3.simpleName
+        }
         else -> {
             ""
         }

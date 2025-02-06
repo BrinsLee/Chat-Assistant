@@ -23,6 +23,8 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class GPTMessage(
 //  @field:Json(name = "mid") val mid: String,
-  @field:Json(name = "role") val role: String = ROLE_USER,
-  @field:Json(name = "content") val content: String = ""
+    @field:Json(name = "role") val role: String = ROLE_USER,
+    @field:Json(name = "content") val content: String = "",
+    @field:Json(name = "reasoning_content") val reasoningContent: String?
+
 )

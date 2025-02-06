@@ -103,7 +103,7 @@ open class BaseChatFragment : BaseSenderFragment(R.layout.fragment_chat_message)
     }
 
     @CallSuper
-    override fun    observerStateAndEvents() {
+    override fun observerStateAndEvents() {
         if (activity == null) {
             return
         }

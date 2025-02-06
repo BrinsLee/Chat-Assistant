@@ -23,12 +23,14 @@ android {
         debug {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField 'String', 'API_KEY', "\"${gptAPIKEY}\""
+            buildConfigField 'String', 'DEEP_SEEK_API_KEY', "\"${deepseekAPIKEY}\""
             buildConfigField 'String', 'CHAT_API_KEY', "\"${chatAPIKEY}\""
 
         }
         release {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField 'String', 'API_KEY', "\"${gptAPIKEY}\""
+            buildConfigField 'String', 'DEEP_SEEK_API_KEY', "\"${deepseekAPIKEY}\""
             buildConfigField 'String', 'CHAT_API_KEY', "\"${chatAPIKEY}\""
 
         }

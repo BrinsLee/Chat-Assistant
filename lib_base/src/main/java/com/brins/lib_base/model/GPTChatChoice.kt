@@ -8,6 +8,4 @@ import java.io.Serializable
 data class GPTChatChoice(
     @field:Json(name = "index") val index: Int,
     @field:Json(name = "message") val message: GPTMessage?,
-    @field:Json(name = "finish_reason") val finishreason: String?) : Serializable {
-
-}
+    @field:Json(name = "finish_reason") val finishreason: String?) : Serializable

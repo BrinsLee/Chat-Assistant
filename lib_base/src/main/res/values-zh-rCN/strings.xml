@@ -15,6 +15,8 @@
     <string name="gpt_3_5">GPT-3.5</string>
     <string name="gpt_4">GPT-4</string>
     <string name="dall_picture_generation">DALL•E 图像生成</string>
+    <string name="deep_seek_v3">deep_seek_v3</string>
+    <string name="deep_seek_r1">deep_seek_r1</string>
 
     <string name="permissions_denied">权限被拒绝。</string>
     <string name="action_settings">"设置"</string>

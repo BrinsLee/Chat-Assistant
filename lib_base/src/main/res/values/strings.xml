@@ -18,6 +18,8 @@
     <string name="gpt_3_5">GPT-3.5</string>
     <string name="gpt_4">GPT-4</string>
     <string name="dall_picture_generation">DALL•E Picture generation</string>
+    <string name="deep_seek_v3">deep_seek_v3</string>
+    <string name="deep_seek_r1">deep_seek_r1</string>
 
     <string name="permissions_denied">Permissions denied.</string>
     <string name="action_settings">"Settings"</string>

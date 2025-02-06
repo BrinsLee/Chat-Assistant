@@ -8,4 +8,4 @@ data class GPTUsage(
     @field:Json(name = "prompt_tokens") val promptTokens: Int,
     @field:Json(name = "completion_tokens") val completionTokens: Int,
     @field:Json(name = "total_tokens") val totalTokens: Int
-) {}
+)

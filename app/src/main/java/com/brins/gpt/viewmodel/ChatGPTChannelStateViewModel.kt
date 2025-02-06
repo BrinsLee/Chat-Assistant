@@ -18,6 +18,8 @@ import com.brins.lib_base.config.MODEL_3_5_TURBO_1106
 import com.brins.lib_base.config.MODEL_4_1106_PREVIEW
 import com.brins.lib_base.config.MODEL_4_VISION_PREVIEW
 import com.brins.lib_base.config.MODEL_DALL_E_3
+import com.brins.lib_base.config.MODEL_DEEP_SEEK_R1
+import com.brins.lib_base.config.MODEL_DEEP_SEEK_V3
 import io.getstream.chat.android.client.api.models.QueryChannelsRequest
 import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.models.FilterObject
@@ -55,12 +57,21 @@ class ChatGPTChannelStateViewModel(
 
     private var queryJob: Job? = null
 
+    /**
+     * 空消息Channel
+     */
     private val emptyMessageChannelStateMerger = MediatorLiveData<ChannelState>()
     val emptyMessageChannelState: LiveData<ChannelState> = emptyMessageChannelStateMerger.distinctUntilChanged()
 
+    /**
+     * 所有Channel
+     */
     private val channelStateMerger = MediatorLiveData<ChannelState>()
     val channelState: LiveData<ChannelState> = channelStateMerger.distinctUntilChanged()
 
+    /**
+     * 分页状态
+     */
     private val paginationStateMerger = MediatorLiveData<PaginationState>()
     val paginationState: LiveData<PaginationState> = paginationStateMerger.distinctUntilChanged()
 
@@ -285,8 +296,8 @@ class ChatGPTChannelStateViewModel(
     /**
      * 处理用户触发事件，目前包含创建会话
      */
-    fun handleEvents(gptChannelEvent: GPTChannelEvent) {
-        createRandomChannel(gptChannelEvent.model)
+    fun handleEvents(createChannelEvent: CreateChannelEvent) {
+        createRandomChannel(createChannelEvent.model)
     }
 
     /**
@@ -341,16 +352,26 @@ class ChatGPTChannelStateViewModel(
 
 
     /**
-     * ====================================== GPTChannelEvent ===============================================
+     * ====================================== CreateChannelEvent ===============================================
      */
-    sealed class GPTChannelEvent (open val model: String) {
-        class CreateChannelEvent3_5(model: String = MODEL_3_5_TURBO_1106) : GPTChannelEvent(model)
+    sealed class CreateChannelEvent (open val model: String) {
+        /**
+         * =================================== OPENAI ============================================
+         */
+        class CreateChannelEvent3_5(model: String = MODEL_3_5_TURBO_1106) : CreateChannelEvent(model)
 
-        class CreateChannelEvent4(model: String = MODEL_4_1106_PREVIEW): GPTChannelEvent(model)
+        class CreateChannelEvent4(model: String = MODEL_4_1106_PREVIEW): CreateChannelEvent(model)
 
-        class CreateChannelEventVision4(model: String = MODEL_4_VISION_PREVIEW): GPTChannelEvent(model)
+        class CreateChannelEventVision4(model: String = MODEL_4_VISION_PREVIEW): CreateChannelEvent(model)
 
-        class CreateChannelEventDall(model: String = MODEL_DALL_E_3): GPTChannelEvent(model)
+        class CreateChannelEventDall(model: String = MODEL_DALL_E_3): CreateChannelEvent(model)
+        /**
+         * =================================== DEEPSEEK ============================================
+         */
+        class CreateChannelEventDeepSeekV3(model: String = MODEL_DEEP_SEEK_V3): CreateChannelEvent(model)
+
+        class CreateChannelEventDeepSeekR1(model: String = MODEL_DEEP_SEEK_R1): CreateChannelEvent(model)
+
     }
 
     /**

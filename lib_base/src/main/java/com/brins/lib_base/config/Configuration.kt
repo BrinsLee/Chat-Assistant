@@ -44,6 +44,16 @@ const val MODEL_DALL_E = "DALL•E"
 const val MODEL_DALL_E_2 = "dall-e-2"
 
 /**
+ * DeepSeek 模型
+ */
+const val MODEL_DEEP_SEEK_V3 = "deepseek-chat"
+const val MODEL_DEEP_SEEK_V3_SIMPLE = "DeepSeek-V3"
+
+const val MODEL_DEEP_SEEK_R1 = "deepseek-reasoner"
+const val MODEL_DEEP_SEEK_R1_SIMPLE = "DeepSeek-R1"
+
+
+/**
  * 语音选项
  *
  */

@@ -26,6 +26,14 @@
             <item
                 android:id="@+id/action_dall"
                 android:title="@string/dall_picture_generation" />
+            <item
+                android:id="@+id/action_deep_seekV3"
+                android:title="@string/deep_seek_v3"
+                />
+            <item
+                android:id="@+id/action_deep_seekR1"
+                android:title="@string/deep_seek_r1"
+                />
         </menu>
     </item>
 </menu>

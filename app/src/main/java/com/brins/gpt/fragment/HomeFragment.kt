@@ -1,7 +1,6 @@
 package com.brins.gpt.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -26,16 +25,17 @@ import com.brins.gpt.viewmodel.ChatGPTChannelStateViewModel
 import com.brins.gpt.viewmodel.ChatGPTImageViewModel
 import com.brins.gpt.viewmodel.ChatGPTMessageViewModel
 import com.brins.gpt.viewmodel.ChatGPTUserInfoViewModel
-import com.brins.lib_base.base.BaseFragment
 import com.brins.lib_base.config.MODEL_3_5_TURBO
 import com.brins.lib_base.config.MODEL_3_5_TURBO_1106
 import com.brins.lib_base.config.MODEL_4_1106_PREVIEW
 import com.brins.lib_base.config.MODEL_4_VISION_PREVIEW
 import com.brins.lib_base.config.MODEL_DALL_E_2
 import com.brins.lib_base.config.MODEL_DALL_E_3
+import com.brins.lib_base.config.MODEL_DEEP_SEEK_V3
 import com.brins.lib_base.extensions.getChannelSimpleName
 import com.brins.lib_base.extensions.isChatGPTChannel
 import com.brins.lib_base.extensions.isDallChannel
+import com.brins.lib_base.extensions.isDeepSeekChannel
 import com.brins.lib_base.extensions.isSameChannel
 import com.brins.lib_base.extensions.isVisible
 import com.brins.lib_base.extensions.updatePartial
@@ -46,9 +46,7 @@ import io.getstream.chat.android.ui.viewmodel.channels.ChannelListViewModel
 import io.getstream.chat.android.ui.viewmodel.search.SearchViewModel
 import io.getstream.chat.android.ui.viewmodel.search.bindView
 import io.getstream.chat.android.ui.widgets.avatar.UserAvatarView
-import io.getstream.log.StreamLog
 import io.getstream.log.streamLog
-import io.getstream.result.Result
 import kotlinx.coroutines.flow.filterNotNull
 import javax.inject.Inject
 
@@ -123,7 +121,7 @@ class HomeFragment : BaseSenderFragment(R.layout.fragment_home) {
             if (!emptyMessageChannel.isLoading) {
                 if (emptyMessageChannel.channels.isEmpty()) {
                     streamLog { "emptyMessageChannelState isEmpty: ${emptyMessageChannel.channels.isEmpty()}" }
-                    mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEvent3_5())
+                    mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.CreateChannelEvent.CreateChannelEvent3_5())
                 } else {
                     streamLog { "emptyMessageChannelState isNotEmpty: ${emptyMessageChannel.channels.isNotEmpty()}" }
                     val isInitialize = (currentEmptyChannel == null)
@@ -131,7 +129,7 @@ class HomeFragment : BaseSenderFragment(R.layout.fragment_home) {
                         streamLog { "emptyMessageChannelState setupEmptyChannel: ${currentEmptyChannel} vs ${emptyMessageChannel.channels[0]}" }
                         currentEmptyChannel = emptyMessageChannel.channels[0]
                         if (isInitialize) {
-                            selectChatGPTChannel()
+                            selectChatMessageChannel()
                         }
                     }
 
@@ -225,18 +223,24 @@ class HomeFragment : BaseSenderFragment(R.layout.fragment_home) {
                         }
 
                         com.brins.lib_base.R.id.action_gpt_3_5 -> {
-                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEvent3_5())
+                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.CreateChannelEvent.CreateChannelEvent3_5())
                             return true
                         }
 
                         com.brins.lib_base.R.id.action_gpt_4 -> {
-                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEvent4())
+                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.CreateChannelEvent.CreateChannelEvent4())
 //                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEventVision4())
                             return true
                         }
 
                         com.brins.lib_base.R.id.action_dall -> {
-                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.GPTChannelEvent.CreateChannelEventDall())
+                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.CreateChannelEvent.CreateChannelEventDall())
+                            return true
+                        }
+
+                        com.brins.lib_base.R.id.action_deep_seekV3 -> {
+                            mChannelViewModel.handleEvents(ChatGPTChannelStateViewModel.CreateChannelEvent.CreateChannelEventDeepSeekV3())
+                            return true
                         }
                     }
                     return false
@@ -322,7 +326,7 @@ class HomeFragment : BaseSenderFragment(R.layout.fragment_home) {
             when (item.itemId) {
                 R.id.chatGpt -> {
 //                    showChangeColorSchemeDialog()
-                    selectChatGPTChannel()
+                    selectChatMessageChannel()
                     mBinding.drawerLayout.closeDrawers()
                     true
                 }
@@ -334,7 +338,7 @@ class HomeFragment : BaseSenderFragment(R.layout.fragment_home) {
                 }
 
                 R.id.deepSeek -> {
-                    selectDallChannel()
+                    selectDeepSeekMessageChannel()
                     mBinding.drawerLayout.closeDrawers()
                     true
                 }
@@ -344,7 +348,7 @@ class HomeFragment : BaseSenderFragment(R.layout.fragment_home) {
                 }
             }
         }
-        selectChatGPTChannel()
+        selectChatMessageChannel()
         /*mBinding.signOutTextView.setOnClickListener {
             //todo 退出登录
             activity?.finish()
@@ -369,7 +373,7 @@ class HomeFragment : BaseSenderFragment(R.layout.fragment_home) {
         }
     }
 
-    private fun selectChatGPTChannel() {
+    private fun selectChatMessageChannel() {
         currentEmptyChannel?.let {
             if (it.isChatGPTChannel()) {
                 if (!it.isSameChannel(currentChannel)) {
@@ -385,6 +389,24 @@ class HomeFragment : BaseSenderFragment(R.layout.fragment_home) {
                 }
             }
         }
+    }
+
+    private fun selectDeepSeekMessageChannel() {
+        currentEmptyChannel?.let {
+            if (it.isDeepSeekChannel()) {
+                if (!it.isSameChannel(currentChannel)) {
+                    currentChannel = currentEmptyChannel
+                }
+                return
+            } else {
+                it.updatePartial(mapOf("model" to MODEL_DEEP_SEEK_V3)) { result ->
+                    result.onSuccess { value ->
+                        currentEmptyChannel = value
+                        currentChannel = value
+                    }
+                }
+            }
+       }
     }
 
     override fun observerStateAndEvents() {
