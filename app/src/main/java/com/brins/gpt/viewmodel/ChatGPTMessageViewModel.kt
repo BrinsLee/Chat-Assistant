@@ -15,6 +15,7 @@ import com.brins.lib_base.extensions.toGPTMessage
 import com.brins.lib_base.extensions.toGPTMessageVision
 import com.brins.lib_base.extensions.toMessage
 import com.brins.lib_base.model.GPTChatRequest
+import com.brins.lib_base.model.audio.Audio
 import com.brins.lib_base.model.audio.GPTTextToSpeechRequest
 import com.brins.lib_base.model.vision.GPTChatRequestVision
 import com.brins.lib_base.utils.FileUtils
@@ -26,9 +27,10 @@ import io.getstream.chat.android.models.Message
 import io.getstream.chat.android.models.User
 import io.getstream.result.Result
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 
@@ -79,41 +81,6 @@ class ChatGPTMessageViewModel @Inject constructor(
     }
 
 
-    fun textToSpeech(context: Context, message: Message, model: String = VOICE_MODEL_TTS_1, voice: String = VOICE_ALLOY) {
-        val fileName = "tts_${message.cid}"
-        FileUtils.isCacheFileExist(context, fileName).onSuccess { isExist ->
-            if (isExist) {
-                //todo 文件存在直接复用
-            } else {
-                val gptTextToSpeechRequest = GPTTextToSpeechRequest(model, message.text,voice)
-                viewModelScope.launch {
-                    val responseBody = gptMessageRepository.messageTextToSpeech(gptTextToSpeechRequest)
-                    responseBody?.apply {
-                        withContext(Dispatchers.IO) {
-                            FileUtils.createFileInCacheDir(context, fileName).onSuccess { file ->
-                                byteStream().use { inputStream ->
-                                    FileOutputStream(file).use { outputStream ->
-                                        val buffer = ByteArray(4096)
-                                        var read: Int
-                                        while (inputStream.read(buffer).also { read = it } != -1) {
-                                            outputStream.write(buffer, 0, read)
-                                        }
-                                        outputStream.flush()
-                                    }
-                                }
-                            }.onError {
-
-                            }
-                        }
-                    }
-
-                }
-            }
-        }.onError {
-            // todo 错误处理
-        }
-
-    }
 
 
     fun sendStreamChatMessage(cid: String, text: String, isFromMine: Boolean) {
@@ -177,6 +144,8 @@ class ChatGPTMessageViewModel @Inject constructor(
 
 //        data class CreateChannelError(override val streamError: Error) : ErrorEvent(streamError)
     }
+
+
 
 
 

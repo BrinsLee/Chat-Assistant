@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="@color/stream_ui_accent_red">
+
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:orientation="vertical"
+        android:paddingStart="0dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="144dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/smallIcon"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="16dp"
+                tools:src="@drawable/ic_notification"
+                tools:tint="@color/stream_ui_black" />
+
+            <TextView
+                android:id="@+id/appName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:singleLine="true"
+                android:textSize="12sp"
+                tools:text="@string/app_name" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp"
+            android:singleLine="true"
+            android:textAppearance="@style/Theme.Chat.Notification"
+            android:textStyle="bold"
+            tools:text="@tools:sample/lorem/random" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp"
+            android:singleLine="true"
+            android:textAppearance="@style/Theme.Chat.Notification.Title"
+            tools:text="@tools:sample/lorem/random" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp">
+
+            <ImageButton
+                android:id="@+id/action_prev"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/notification_selector"
+                android:scaleType="centerInside"
+                tools:src="@drawable/ic_skip_previous"
+                tools:tint="?colorOnPrimary" />
+
+            <ImageButton
+                android:id="@+id/action_play_pause"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/notification_selector"
+                android:scaleType="centerInside"
+                tools:src="@drawable/ic_pause_white_48dp"
+                tools:tint="?colorOnPrimary" />
+
+            <ImageButton
+                android:id="@+id/action_next"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/notification_selector"
+                android:scaleType="centerInside"
+                tools:src="@drawable/ic_skip_next"
+                tools:tint="?colorOnPrimary" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

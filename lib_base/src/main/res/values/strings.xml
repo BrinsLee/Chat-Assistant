@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Chat Assistant</string>
     <string name="search">Search</string>
     <string name="more">More</string>
     <string name="disconnected" tools:ignore="ExtraTranslation">Disconnected</string>
@@ -20,4 +21,8 @@
 
     <string name="permissions_denied">Permissions denied.</string>
     <string name="action_settings">"Settings"</string>
+    <string name="audio_focus_denied">Audio focus denied.</string>
+    <string name="playing_notification_name">Playing notification</string>
+    <string name="playing_notification_description">The playing notification provides actions for play/pause etc.</string>
+
 </resources>

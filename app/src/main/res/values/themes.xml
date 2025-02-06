@@ -5,5 +5,8 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Gpt" parent="Base.Theme.Gpt" />
+    <style name="Theme.Gpt" parent="Base.Theme.Gpt" >
+        <item name="roundSelector">@drawable/round_selector</item>
+        <item name="rectSelector">@drawable/rect_selector</item>
+    </style>
 </resources>

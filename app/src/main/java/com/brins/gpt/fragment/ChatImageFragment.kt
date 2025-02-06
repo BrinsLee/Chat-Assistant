@@ -28,7 +28,7 @@ class ChatImageFragment : BaseChatFragment() {
 
     override fun setupEmptyMessageView(messageListView: MessageListView) {
         val binding: CommonEmptyMessageViewBinding = CommonEmptyMessageViewBinding.inflate(layoutInflater)
-        binding.userAvatarView.setImageResource(R.drawable.ic_dall_e)
+        binding.userAvatarView.setImageResource(com.brins.lib_base.R.drawable.ic_dall_e)
         messageListView.setEmptyStateView(binding.root)
     }
 
@@ -71,15 +71,18 @@ class ChatImageFragment : BaseChatFragment() {
     }
 
     override fun observerStateAndEvents() {
+        if (activity == null) {
+            return
+        }
         super.observerStateAndEvents()
-        imageMessageSenderViewModel.isMessageEmpty.observe(viewLifecycleOwner) { isMessageEmpty ->
+        /*imageMessageSenderViewModel.isMessageEmpty.observe(viewLifecycleOwner) { isMessageEmpty ->
             if (isMessageEmpty) {
                 StreamLog.d("emptyMessage") {
                     "isMessageEmpty: ${isMessageEmpty}"
                 }
                 imageMessageSenderViewModel.sendStreamChatMessage(mChannelId, getString(R.string.toast_dall_e_hello), false)
             }
-        }
+        }*/
 
 
     }

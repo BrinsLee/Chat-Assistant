@@ -40,9 +40,6 @@ interface IGPTMessageRepository {
      */
     suspend fun sendStreamMessage(message: Message): Call<Message>
 
-    /**
-     * 文本转语音
-     */
-    suspend fun messageTextToSpeech(gptTextToSpeechRequest: GPTTextToSpeechRequest): ResponseBody?
+
 
 }

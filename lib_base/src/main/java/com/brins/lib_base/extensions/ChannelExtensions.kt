@@ -1,6 +1,7 @@
 package com.brins.lib_base.extensions
 
 import android.annotation.SuppressLint
+import com.brins.lib_base.R
 import com.brins.lib_base.config.ChatModel
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.models.Channel
@@ -18,8 +19,24 @@ fun Channel.isChatGPTChannel(): Boolean {
     return this.extraData.containsKey("model") && (this.extraData["model"] as String).contains("gpt")
 }
 
+fun Channel.isDeepSeekChannel(): Boolean {
+    return this.extraData.containsKey("model") && (this.extraData["model"] as String).contains("deepseek", ignoreCase = true)
+}
+
 fun Channel.isDallChannel(): Boolean {
     return this.extraData.containsKey("model") && (this.extraData["model"] as String).contains("dall")
+}
+
+fun Channel.getChannelIcon(): Int {
+    return if(this.isChatGPTChannel()) {
+        R.drawable.ic_openai
+    } else if(this.isDeepSeekChannel()) {
+        R.drawable.ic_deepseek
+    } else if(this.isDallChannel()) {
+        R.drawable.ic_dall_e
+    } else {
+        R.drawable.ic_openai
+    }
 }
 
 fun Channel.getChannelSimpleName(): String {

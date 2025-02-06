@@ -128,18 +128,5 @@ class GPTMessageRepositoryImpl @Inject constructor(
         return channelClient.sendMessage(realSendMessage)
     }
 
-    override suspend fun messageTextToSpeech(gptTextToSpeechRequest: GPTTextToSpeechRequest): ResponseBody? {
-        val result = networkUtils.safeApiCall {
-            chatGptService.createSpeech(gptTextToSpeechRequest)
-        }
-        return when (result) {
-            is NetworkUtils.Result.Success -> {
-                result.data
-            }
 
-            is NetworkUtils.Result.Error -> {
-                null
-            }
-        }
-    }
 }

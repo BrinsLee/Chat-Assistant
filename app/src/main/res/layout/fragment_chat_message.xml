@@ -7,13 +7,13 @@
     tools:context=".fragment.ChatMessageFragment">
 
 
-<!--    <io.getstream.chat.android.ui.feature.messages.header.MessageListHeaderView
-        android:id="@+id/messageListHeaderView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
+    <!--    <io.getstream.chat.android.ui.feature.messages.header.MessageListHeaderView
+            android:id="@+id/messageListHeaderView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />-->
 
     <io.getstream.chat.android.ui.feature.messages.list.MessageListView
         android:id="@+id/messageListView"
@@ -24,14 +24,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:streamUiFlagMessageConfirmationEnabled="false"
-        app:streamUiPinMessageEnabled="false"
-        app:streamUiDeleteMessageEnabled="false"
         app:streamUiDeleteConfirmationEnabled="false"
-        app:streamUiThreadsEnabled="false"
-        app:streamUiMarkAsUnreadEnabled="false"
+        app:streamUiDeleteMessageEnabled="false"
         app:streamUiEditMessageEnabled="false"
-        />
+        app:streamUiFlagMessageConfirmationEnabled="false"
+        app:streamUiMarkAsUnreadEnabled="false"
+        app:streamUiPinMessageEnabled="false"
+        app:streamUiThreadsEnabled="false" />
 
     <io.getstream.chat.android.ui.feature.messages.composer.MessageComposerView
         android:id="@+id/messageComposerView"
@@ -41,8 +40,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messageListView"
-        app:streamUiMessageComposerMessageInputHintText="@string/message"
-        app:streamUiMessageComposerAttachmentsPickerFileAttachmentsTabEnabled="false"
         app:streamUiMessageComposerAttachmentsPickerDialogFragmentHeight="600dp"
-        />
+        app:streamUiMessageComposerAttachmentsPickerFileAttachmentsTabEnabled="false"
+        app:streamUiMessageComposerMessageInputHintText="@string/message" />
+
+<!--    <com.brins.blurlib.BlurView
+        android:id="@+id/playViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginHorizontal="@dimen/spacing_8dp"
+        app:blurViewBottomLeftRadius="@dimen/spacing_8dp"
+        app:blurViewBottomRightRadius="@dimen/spacing_8dp"
+        app:blurViewOverlayColor="@color/darkDark30"
+        app:blurViewRadius="10"
+        app:blurViewTopLeftRadius="@dimen/spacing_8dp"
+        app:blurViewTopRightRadius="@dimen/spacing_8dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/llPlayerContainer"
+            layout="@layout/fragment_mini_player" />
+    </com.brins.blurlib.BlurView>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

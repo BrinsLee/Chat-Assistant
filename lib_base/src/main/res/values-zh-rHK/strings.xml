@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Chat Assistant</string>
+
     <string name="color_scheme">顔色主題</string>
     <string name="theme">主題</string>
     <string name="color_light">淺色</string>
@@ -15,4 +17,7 @@
 
     <string name="permissions_denied">存取權限被拒。</string>
     <string name="action_settings">"設定"</string>
+    <string name="audio_focus_denied">音頻焦點被禁止</string>
+    <string name="playing_notification_description">播放通知提供播放暫停等操作</string>
+    <string name="playing_notification_name">播放通知</string>
 </resources>

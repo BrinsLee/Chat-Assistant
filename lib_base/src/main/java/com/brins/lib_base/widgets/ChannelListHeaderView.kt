@@ -123,6 +123,14 @@ class ChannelListHeaderView @JvmOverloads constructor(
         binding.onlineTextView.text = string
     }
 
+    fun showTypingView() {
+        binding.typing.isVisible = true
+    }
+
+    fun hideTypingView() {
+        binding.typing.isVisible = false
+    }
+
     fun hideOfflineTitle() {
         binding.offlineTitleContainer.isVisible = false
         binding.onlineTitleContainer.isVisible = true

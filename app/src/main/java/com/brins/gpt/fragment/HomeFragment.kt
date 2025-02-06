@@ -23,6 +23,8 @@ import com.brins.gpt.databinding.FragmentHomeBinding
 import com.brins.gpt.di.GPTChannelViewModelFactory
 import com.brins.gpt.extensions.bindsView
 import com.brins.gpt.viewmodel.ChatGPTChannelStateViewModel
+import com.brins.gpt.viewmodel.ChatGPTImageViewModel
+import com.brins.gpt.viewmodel.ChatGPTMessageViewModel
 import com.brins.gpt.viewmodel.ChatGPTUserInfoViewModel
 import com.brins.lib_base.base.BaseFragment
 import com.brins.lib_base.config.MODEL_3_5_TURBO
@@ -52,7 +54,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(R.layout.fragment_home) {
+class HomeFragment : BaseSenderFragment(R.layout.fragment_home) {
 
     private lateinit var mBinding: FragmentHomeBinding
 
@@ -145,6 +147,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             }*/
         }
     }
+
+
 
     private fun setupChatMessageView() {
         currentChannel?.apply {
@@ -261,7 +265,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private fun setupNavigationDrawer() {
         AppBarConfiguration(
-            setOf(R.id.chatGpt, R.id.dall_e), mBinding.drawerLayout
+            setOf(R.id.chatGpt, R.id.dall_e, R.id.deepSeek), mBinding.drawerLayout
         )
         mBinding.drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -295,7 +299,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             isChecked = true
             actionView?.apply {
                 val imageView: ImageView = findViewById(R.id.menuImageView)
-                imageView.setImageResource(R.drawable.ic_chat_gpt)
+                imageView.setImageResource(com.brins.lib_base.R.drawable.ic_openai)
                 val textView: TextView = findViewById(R.id.nameTextView)
                 textView.setText(R.string.chatGPT)
             }
@@ -303,9 +307,15 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         }
         menu.findItem(R.id.dall_e).actionView?.apply {
             val imageView: ImageView = findViewById(R.id.menuImageView)
-            imageView.setImageResource(R.drawable.ic_dall_e)
+            imageView.setImageResource(com.brins.lib_base.R.drawable.ic_dall_e)
             val textView: TextView = findViewById(R.id.nameTextView)
             textView.setText(R.string.dall_e)
+        }
+        menu.findItem(R.id.deepSeek).actionView?.apply {
+            val imageView: ImageView = findViewById(R.id.menuImageView)
+            imageView.setImageResource(com.brins.lib_base.R.drawable.ic_deepseek)
+            val textView: TextView = findViewById(R.id.nameTextView)
+            textView.setText(R.string.deepSeek)
         }
 
         mBinding.navigationView.setNavigationItemSelectedListener { item ->
@@ -318,6 +328,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                 }
 
                 R.id.dall_e -> {
+                    selectDallChannel()
+                    mBinding.drawerLayout.closeDrawers()
+                    true
+                }
+
+                R.id.deepSeek -> {
                     selectDallChannel()
                     mBinding.drawerLayout.closeDrawers()
                     true
@@ -371,7 +387,35 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         }
     }
 
-    private fun observerStateAndEvents() {
+    override fun observerStateAndEvents() {
+        if (activity == null) {
+            return
+        }
+        super.observerStateAndEvents()
+
+        messageSenderViewModel.typingState.observe(viewLifecycleOwner) { typingState ->
+            when(typingState) {
+                is ChatGPTMessageViewModel.TypingState.Typing -> {
+                    mBinding.channelListHeader.showTypingView()
+                }
+                is ChatGPTMessageViewModel.TypingState.Normal -> {
+                    mBinding.channelListHeader.hideTypingView()
+                }
+
+            }
+        }
+
+        imageMessageSenderViewModel.typingState.observe(viewLifecycleOwner) { typingState ->
+            when(typingState) {
+                is ChatGPTImageViewModel.TypingState.Typing -> {
+                    mBinding.channelListHeader.showTypingView()
+                }
+                is ChatGPTImageViewModel.TypingState.Normal -> {
+                    mBinding.channelListHeader.hideTypingView()
+                }
+
+            }
+        }
 
         mUserInfoViewModel.userState.observe(viewLifecycleOwner) { state ->
             when (state) {

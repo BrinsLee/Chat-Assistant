@@ -99,5 +99,9 @@ const val EXTRA_KEY_USER_DATA: String = "extra_key_user_data" //用户数据
  */
 const val LANGUAGE_NAME = "language_name"
 const val GENERAL_THEME = "general_theme"
+const val MANAGE_AUDIO_FOCUS = "manage_audio_focus"
+const val PLAYBACK_SPEED = "playback_speed"
+const val PLAYBACK_PITCH = "playback_pitch"
+
 
 

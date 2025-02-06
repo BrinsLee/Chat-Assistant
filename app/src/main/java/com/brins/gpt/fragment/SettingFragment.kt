@@ -4,13 +4,11 @@ package com.brins.gpt.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
-import androidx.preference.ListPreference
 import androidx.preference.Preference
 import com.brins.gpt.R
 import com.brins.gpt.theme.ThemeMode
-import com.brins.gpt.utils.PreferenceUtils.languageCode
+import com.brins.lib_base.utils.PreferenceUtils.languageCode
 import com.brins.lib_base.config.GENERAL_THEME
 import com.brins.lib_base.config.LANGUAGE_NAME
 import dagger.hilt.android.AndroidEntryPoint

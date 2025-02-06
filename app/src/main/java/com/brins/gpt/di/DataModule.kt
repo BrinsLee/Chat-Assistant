@@ -1,9 +1,11 @@
 package com.brins.gpt.di
 
+import com.brins.gpt.repository.GPTAudioRepositoryImpl
 import com.brins.gpt.repository.GPTChannelRepositoryImpl
 import com.brins.gpt.repository.GPTImageRepositoryImpl
 import com.brins.gpt.repository.GPTUserInfoRepositoryImpl
 import com.brins.gpt.repository.GPTMessageRepositoryImpl
+import com.brins.gpt.repository.IGPTAudioRepository
 import com.brins.gpt.repository.IGPTChannelRepository
 import com.brins.gpt.repository.IGPTImageRepository
 import com.brins.gpt.repository.IGPTUserInfoRepository
@@ -19,6 +21,10 @@ interface DataModule {
 
     @Binds
     fun bindGPTChatMessageRepository(gptChatMessageRepository: GPTMessageRepositoryImpl): IGPTMessageRepository
+
+
+    @Binds
+    fun bindGPTChatAudioRepository(gptChatAudioRepository: GPTAudioRepositoryImpl): IGPTAudioRepository
 
 
     @Binds

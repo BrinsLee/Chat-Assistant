@@ -1,14 +1,14 @@
-package com.brins.gpt.utils
+package com.brins.lib_base.utils
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import com.brins.gpt.ChatApp
 import com.brins.gpt.theme.ThemeMode
 import com.brins.lib_base.config.GENERAL_THEME
 import com.brins.lib_base.config.LANGUAGE_NAME
-import com.brins.lib_base.utils.AppUtils
-import com.brins.lib_base.utils.MMKVUtils
+import com.brins.lib_base.config.MANAGE_AUDIO_FOCUS
+import com.brins.lib_base.config.PLAYBACK_PITCH
+import com.brins.lib_base.config.PLAYBACK_SPEED
 
 object PreferenceUtils {
 
@@ -44,4 +44,19 @@ object PreferenceUtils {
         changeListener: SharedPreferences.OnSharedPreferenceChangeListener,
     ) = sharedPreferences.unregisterOnSharedPreferenceChangeListener(changeListener)
 
+
+    val isAudioFocusEnabled
+        get() = sharedPreferences.getBoolean(
+            MANAGE_AUDIO_FOCUS, false
+        )
+
+    var playbackSpeed
+        get() = sharedPreferences
+            .getFloat(PLAYBACK_SPEED, 1F)
+        set(value) = sharedPreferences.edit { putFloat(PLAYBACK_SPEED, value) }
+
+    var playbackPitch
+        get() = sharedPreferences
+            .getFloat(PLAYBACK_PITCH, 1F)
+        set(value) = sharedPreferences.edit { putFloat(PLAYBACK_PITCH, value) }
 }

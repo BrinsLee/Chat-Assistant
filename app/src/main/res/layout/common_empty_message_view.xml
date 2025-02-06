@@ -7,7 +7,7 @@
     <io.getstream.chat.android.ui.widgets.avatar.UserAvatarView
         android:id="@+id/userAvatarView"
         style="@style/StreamUiChannelListAvatarStyle"
-        tools:src="@drawable/ic_chat_gpt"
+        tools:src="@drawable/ic_openai"
         android:layout_gravity="center"
         />
 </FrameLayout>

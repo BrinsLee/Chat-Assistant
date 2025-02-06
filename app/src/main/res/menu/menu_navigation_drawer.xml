@@ -12,4 +12,9 @@
         app:actionLayout="@layout/item_menu"
         tools:ignore="MenuTitle" />
 
+    <item
+        android:id="@+id/deepSeek"
+        app:actionLayout="@layout/item_menu"
+        tools:ignore="MenuTitle" />
+
 </menu>

@@ -20,6 +20,7 @@ object ScreenUtils {
         return outMetrics.widthPixels
     }
 
+
     /**
      * 获取屏幕的高度px
      *

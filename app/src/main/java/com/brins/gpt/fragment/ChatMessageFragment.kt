@@ -8,6 +8,7 @@ import com.brins.gpt.widget.GPT3MessageComposerLeadingContent
 import com.brins.gpt.widget.GPT3MessageComposerTrailingContent
 import com.brins.gpt.widget.GPT4MessageComposerLeadingContent
 import com.brins.gpt.widget.GPT4MessageComposerTrailingContent
+import com.brins.lib_base.extensions.getChannelIcon
 import com.brins.lib_base.extensions.isChatGPTChannel
 import dagger.hilt.android.AndroidEntryPoint
 import io.getstream.chat.android.ui.common.state.messages.MessageMode
@@ -65,7 +66,7 @@ class ChatMessageFragment : BaseChatFragment() {
     override fun setupEmptyMessageView(messageListView: MessageListView) {
         val binding: CommonEmptyMessageViewBinding =
             CommonEmptyMessageViewBinding.inflate(layoutInflater)
-        binding.userAvatarView.setImageResource(if (mChannel.isChatGPTChannel()) R.drawable.ic_chat_gpt else R.drawable.ic_dall_e)
+        binding.userAvatarView.setImageResource(mChannel.getChannelIcon())
         messageListView.setEmptyStateView(binding.root)
     }
 
@@ -129,7 +130,7 @@ class ChatMessageFragment : BaseChatFragment() {
             }
 
             mBinding.messageListView.setMessageTextToSpeechHandler { message ->
-                messageSenderViewModel.textToSpeech(requireContext(), message)
+                messageAudioViewModel.textToSpeech(requireContext(), message)
             }
 
             mBinding.messageListView.setAttachmentReplyOptionClickHandler { result ->
@@ -157,6 +158,9 @@ class ChatMessageFragment : BaseChatFragment() {
     }*/
 
     override fun observerStateAndEvents() {
+        if (activity == null) {
+            return
+        }
         super.observerStateAndEvents()
         messageSenderViewModel.isMessageEmpty.observe(viewLifecycleOwner) { isMessageEmpty ->
             /*if (isMessageEmpty) {

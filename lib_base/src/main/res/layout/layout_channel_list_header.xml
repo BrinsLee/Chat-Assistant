@@ -27,7 +27,7 @@
         android:layout_height="match_parent"
         android:layout_marginHorizontal="8dp"
         android:gravity="center"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/separator"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,8 +41,16 @@
             style="@style/StreamUiTextAppearance.HeadlineBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="chatGPT"
             android:textDirection="locale"
+            />
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/typing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/StreamUiTextAppearance.Body"
+            android:text="typing..."
             />
 
     </LinearLayout>
@@ -59,7 +67,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible"
+        tools:visibility="invisible"
         >
 
         <ProgressBar

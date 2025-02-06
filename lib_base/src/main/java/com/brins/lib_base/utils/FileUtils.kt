@@ -1,7 +1,6 @@
 package com.brins.lib_base.utils
 
 import android.content.Context
-import io.getstream.chat.android.ui.common.utils.StreamFileUtil
 import io.getstream.result.Error
 import io.getstream.result.Result
 import io.getstream.result.flatMap
@@ -11,8 +10,8 @@ object FileUtils {
 
     const val CACHE_DIR_NAME = "gpt_cache"
 
-    fun isCacheFileExist(context: Context, fileName: String): Result<Boolean> = try {
-        getOrCreateStreamCacheDir(context).flatMap { Result.Success(File(it, fileName).exists()) }
+    fun getCacheFile(context: Context, fileName: String): Result<File> = try {
+        getOrCreateStreamCacheDir(context).flatMap { Result.Success(File(it, fileName)) }
     } catch (e: Exception) {
         Result.Failure(
             Error.ThrowableError(

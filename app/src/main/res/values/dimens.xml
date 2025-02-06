@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <dimen name="spacing_small">8dp</dimen>
     <dimen name="spacing_medium">16dp</dimen>
     <dimen name="spacing_large">24dp</dimen>
@@ -11,8 +12,10 @@
     <dimen name="spacing_10dp">10dp</dimen>
     <dimen name="spacing_12dp">12dp</dimen>
     <dimen name="spacing_18dp">18dp</dimen>
+    <dimen name="icon_notification_dimen">32dp</dimen>
     <dimen name="spacing_50dp">50dp</dimen>
     <dimen name="spacing_56dp">56dp</dimen>
-
-    <dimen name="spacing_200dp">180dp</dimen>
+    <dimen name="spacing_180dp">180dp</dimen>
+    <dimen name="spacing_200dp">200dp</dimen>
+    <dimen name="spacing_240dp">240dp</dimen>
 </resources>
