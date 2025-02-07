@@ -32,7 +32,7 @@ fun Message.getSenderDisplayNames(isDirectMessaging: Boolean = false): String? =
 }
 
 fun Message.toGPTMessage(): GPTMessage {
-    return GPTMessage(ROLE_USER, this.text)
+    return GPTMessage(ROLE_USER, this.text, "")
 }
 
 fun Message.toGPTMessageVision(): GPTMessageVision {

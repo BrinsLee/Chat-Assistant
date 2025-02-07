@@ -16,15 +16,18 @@
 
 package com.brins.lib_base.model
 
+import android.os.Parcelable
 import com.brins.lib_base.config.ROLE_USER
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 
 @JsonClass(generateAdapter = true)
+@Parcelize
 data class GPTMessage(
 //  @field:Json(name = "mid") val mid: String,
     @field:Json(name = "role") val role: String = ROLE_USER,
     @field:Json(name = "content") val content: String = "",
     @field:Json(name = "reasoning_content") val reasoningContent: String?
 
-)
+): Parcelable

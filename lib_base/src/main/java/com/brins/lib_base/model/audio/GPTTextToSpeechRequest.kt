@@ -1,6 +1,6 @@
 package com.brins.lib_base.model.audio
 
-import com.brins.lib_base.config.MODEL_DALL_E_3
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_DALL_E_3
 import com.brins.lib_base.config.VOICE_ALLOY
 import com.brins.lib_base.config.VOICE_MODEL_TTS_1
 import com.brins.lib_base.model.image.IMAGE_SIZE_1024_1024

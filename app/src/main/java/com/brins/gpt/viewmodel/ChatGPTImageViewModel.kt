@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.brins.gpt.repository.GPTImageRepositoryImpl
 import com.brins.gpt.repository.IGPTImageRepository
-import com.brins.lib_base.config.MODEL_3_5_TURBO
-import com.brins.lib_base.config.MODEL_DALL_E_3
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_3_5_TURBO
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_DALL_E_3
 import com.brins.lib_base.config.chatGPTUser
 import com.brins.lib_base.extensions.toMessage
 import com.brins.lib_base.model.image.GPTImageRequest

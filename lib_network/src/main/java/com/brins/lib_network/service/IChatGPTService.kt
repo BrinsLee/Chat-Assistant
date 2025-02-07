@@ -32,6 +32,15 @@ interface IChatGPTService {
     @POST("v1/chat/completions")
     suspend fun createCompletion(@Body body: GPTChatRequest): Response<GPTChatResponse>
 
+    /**
+     * 聊天接口，流式
+     */
+    @Streaming
+    @POST("v1/chat/completions")
+    suspend fun createCompletionStream(
+        @Body request: GPTChatRequest
+    ): Response<ResponseBody>
+
 
     /**
      * 识图接口

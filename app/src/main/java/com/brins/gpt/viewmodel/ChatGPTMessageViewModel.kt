@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.brins.gpt.repository.IGPTMessageRepository
-import com.brins.lib_base.config.MODEL_3_5_TURBO
-import com.brins.lib_base.config.MODEL_4_VISION_PREVIEW
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_3_5_TURBO
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_4_VISION_PREVIEW
 import com.brins.lib_base.config.VOICE_ALLOY
 import com.brins.lib_base.config.VOICE_MODEL_TTS_1
 import com.brins.lib_base.config.chatGPTUser
@@ -64,6 +64,30 @@ class ChatGPTMessageViewModel @Inject constructor(
             _typingState.value = TypingState.Normal
         }
     }
+
+    private fun createCompletionStream(message: Message, model: String) {
+        _typingState.value = TypingState.Typing(chatGPTUser)
+        viewModelScope.launch {
+            val gptChatRequest: GPTChatRequest =
+                GPTChatRequest(messages = listOf(message.toGPTMessage()), model, stream = true)
+            val result = gptMessageRepository.createCompletionStream(gptChatRequest, onChunkReceived = {
+
+            }, onComplete = {
+                _typingState.value = TypingState.Normal
+            }, onError = {
+                _errorEvents.postValue(ErrorEvent.SendMessageError(ErrorCode.NETWORK_FAILED))
+                _typingState.value = TypingState.Normal
+            })
+            if (result != null) {
+                gptMessageRepository.sendStreamMessage(result.toMessage(message)).await()
+            } else {
+                _errorEvents.postValue(ErrorEvent.SendMessageError(ErrorCode.NETWORK_FAILED))
+            }
+            _typingState.value = TypingState.Normal
+        }
+    }
+
+
 
     private fun createCompletionVision(message: Message, model: String = MODEL_4_VISION_PREVIEW) {
         _typingState.value = TypingState.Typing(chatGPTUser)

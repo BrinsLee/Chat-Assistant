@@ -24,33 +24,7 @@ const val ROLE_USER = "user"
 
 const val ROLE_ASSISTANT = "assistant"
 
-/**
- * 模型相关
- */
-// Up to Sep 2021
-const val MODEL_3_5_TURBO = "gpt-3.5-turbo"
 
-const val MODEL_3_5_TURBO_1106 = "gpt-3.5-turbo-1106"
-const val MODEL_3_5 = "ChatGPT 3.5"
-// Up to Apr 2023
-const val MODEL_4_1106_PREVIEW = "gpt-4-1106-preview"
-const val MODEL_4 = "ChatGPT 4"
-// vision-preview
-const val MODEL_4_VISION_PREVIEW = "gpt-4-vision-preview"
-// dall-e-3 生成图片
-const val MODEL_DALL_E_3 = "dall-e-3"
-const val MODEL_DALL_E = "DALL•E"
-// dall-e-2 生成图片
-const val MODEL_DALL_E_2 = "dall-e-2"
-
-/**
- * DeepSeek 模型
- */
-const val MODEL_DEEP_SEEK_V3 = "deepseek-chat"
-const val MODEL_DEEP_SEEK_V3_SIMPLE = "DeepSeek-V3"
-
-const val MODEL_DEEP_SEEK_R1 = "deepseek-reasoner"
-const val MODEL_DEEP_SEEK_R1_SIMPLE = "DeepSeek-R1"
 
 
 /**

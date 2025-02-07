@@ -2,12 +2,12 @@ package com.brins.gpt.repository
 
 import com.brins.gpt.ChatApp
 import com.brins.lib_base.config.ChatModel
-import com.brins.lib_base.config.MODEL_3_5_TURBO
-import com.brins.lib_base.config.MODEL_3_5_TURBO_1106
-import com.brins.lib_base.config.MODEL_4_1106_PREVIEW
-import com.brins.lib_base.config.MODEL_4_VISION_PREVIEW
-import com.brins.lib_base.config.MODEL_DALL_E_2
-import com.brins.lib_base.config.MODEL_DALL_E_3
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_3_5_TURBO
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_3_5_TURBO_1106
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_4_1106_PREVIEW
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_4_VISION_PREVIEW
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_DALL_E_2
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_DALL_E_3
 import com.brins.lib_base.config.chatGPTUser
 import com.brins.lib_base.extensions.defaultChannelListFilter
 import io.getstream.chat.android.client.ChatClient

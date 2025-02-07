@@ -1,6 +1,6 @@
 package com.brins.lib_base.model.image
 
-import com.brins.lib_base.config.MODEL_DALL_E_3
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_DALL_E_3
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

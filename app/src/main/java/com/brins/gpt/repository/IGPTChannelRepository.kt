@@ -1,6 +1,6 @@
 package com.brins.gpt.repository
 
-import com.brins.lib_base.config.MODEL_3_5_TURBO_1106
+import com.brins.lib_base.config.ChatModel.Companion.MODEL_3_5_TURBO_1106
 import io.getstream.chat.android.client.api.models.QueryChannelsRequest
 import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.models.FilterObject

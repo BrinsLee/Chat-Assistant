@@ -8,6 +8,7 @@ import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.models.Message
 import io.getstream.result.call.Call
 import okhttp3.ResponseBody
+import java.io.IOException
 
 interface IGPTMessageRepository {
     /**
@@ -19,6 +20,13 @@ interface IGPTMessageRepository {
      * 与gpt创建会话
      */
     suspend fun createCompletion(gptChatRequest: GPTChatRequest): GPTChatResponse?
+
+    /**
+     * 与gpt创建会话，流式
+     */
+    suspend fun createCompletionStream(gptChatRequest: GPTChatRequest, onChunkReceived: (content: String) -> Unit,
+        onComplete: () -> Unit,
+        onError: (error: IOException) -> Unit)
 
     /**
      * 与gpt创建识图会话

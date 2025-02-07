@@ -8,6 +8,7 @@ import com.brins.lib_base.model.audio.GPTTextToSpeechRequest
 import com.brins.lib_base.model.vision.GPTChatRequestVision
 import com.brins.lib_network.service.IChatGPTService
 import com.brins.lib_network.utils.NetworkUtils
+import com.squareup.moshi.Moshi
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.models.Message
@@ -16,15 +17,18 @@ import io.getstream.result.call.Call
 import io.getstream.result.onErrorSuspend
 import io.getstream.result.onSuccessSuspend
 import okhttp3.ResponseBody
+import java.io.IOException
 import java.util.UUID
 
 class GPTMessageRepositoryImpl @Inject constructor(
     private val networkUtils: NetworkUtils,
     private val chatClient: ChatClient,
-    private val chatGptService: IChatGPTService
+    private val chatGptService: IChatGPTService,
+    private val moshi: Moshi
 ) : IGPTMessageRepository {
 
     private var currentChannel: Channel? = null
+    private val adapter = moshi.adapter(GPTChatResponse::class.java)
 
     override suspend fun sendMessage(gptChatRequest: GPTChatRequest): GPTChatResponse? {/*val moshi = Moshi.Builder().build()
 //        val json = moshi.adapter(GPTChatRequest::class.java).toJson(gptChatRequest)
@@ -58,6 +62,38 @@ class GPTMessageRepositoryImpl @Inject constructor(
                 null
             }
         }
+    }
+
+    override suspend fun createCompletionStream(gptChatRequest: GPTChatRequest,
+        onChunkReceived: (content: String) -> Unit,
+        onComplete: () -> Unit,
+        onError: (error: IOException) -> Unit) {
+        networkUtils.safeStreamApiCall<String>(
+            apiCall = {
+                chatGptService.createCompletionStream(gptChatRequest)
+            },
+            onChunkReceived = { chunk ->
+                onChunkReceived(chunk)
+            },
+            onComplete = onComplete,
+            onError = onError,
+            chunkParser = { json ->
+                val response = adapter.fromJson(json)
+                if (response == null || response.choices.isEmpty()) {
+                    ""
+                } else {
+                    val stringBuffer = StringBuffer()
+                    for (choice in response.choices) {
+                        if (choice.finishreason != "stop") {
+                            if (choice.delta?.content != null) {
+                                stringBuffer.append(choice.delta!!.content)
+                            }
+                        }
+                    }
+                    stringBuffer.toString()
+                }
+            }
+        )
     }
 
     override suspend fun createCompletion(gptChatRequest: GPTChatRequestVision): GPTChatResponse? {

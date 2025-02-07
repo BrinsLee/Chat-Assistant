@@ -3,6 +3,7 @@ package com.brins.lib_network.utils
 import dagger.hilt.InstallIn
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -36,6 +37,53 @@ class NetworkUtils @Inject constructor(val dispatcher: CoroutineDispatcher) {
                     is HttpException -> Result.Error(IOException("HttpException: ${e.message}", e))
                     is IOException -> Result.Error(IOException("Network error occurred: ${e.message}", e))
                     else -> Result.Error(IOException("Unknown error occurred: ${e.message}", e))
+                }
+            }
+        }
+    }
+
+    // 流式请求封装
+    suspend fun <T : Any> safeStreamApiCall(
+        apiCall: suspend () -> Response<ResponseBody>,
+        onChunkReceived: (chunk: T) -> Unit,
+        onComplete: () -> Unit,
+        onError: (error: IOException) -> Unit,
+        chunkParser: (chunk: String) -> T?
+    ) {
+        withContext(dispatcher) {
+            try {
+                val response = apiCall()
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    body?.use { responseBody ->
+                        val source = responseBody.source()
+                        val buffer = source.buffer()
+                        while (true) {
+                            val line = buffer.readUtf8Line() ?: break
+                            if (line.isBlank()) continue
+                            if (line.startsWith("data: ")) {
+                                val json = line.removePrefix("data: ").trim()
+                                if (json == "[DONE]") {
+                                    onComplete()
+                                    break
+                                }
+
+                                // 解析并回调
+                                chunkParser(json)?.let { parsedChunk ->
+                                    onChunkReceived(parsedChunk)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    onError(IOException("Error occurred during getting safe Api result: ${response.errorBody()?.string()}"))
+                }
+            }catch (e: Exception) {
+
+                when (e) {
+                    is HttpException -> onError(IOException("HttpException: ${e.message}", e))
+                    is IOException -> onError(IOException("Network error occurred: ${e.message}", e))
+                    else -> onError(IOException("Unknown error occurred: ${e.message}", e))
                 }
             }
         }
