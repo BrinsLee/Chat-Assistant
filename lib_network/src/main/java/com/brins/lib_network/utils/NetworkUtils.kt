@@ -6,6 +6,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import retrofit2.HttpException
 import retrofit2.Response
+import java.io.BufferedReader
 import java.io.IOException
 import javax.inject.Inject
 
@@ -45,6 +46,7 @@ class NetworkUtils @Inject constructor(val dispatcher: CoroutineDispatcher) {
     // 流式请求封装
     suspend fun <T : Any> safeStreamApiCall(
         apiCall: suspend () -> Response<ResponseBody>,
+        onStart: suspend (chunk: T) -> Unit,
         onChunkReceived: (chunk: T) -> Unit,
         onComplete: () -> Unit,
         onError: (error: IOException) -> Unit,
@@ -57,9 +59,10 @@ class NetworkUtils @Inject constructor(val dispatcher: CoroutineDispatcher) {
                     val body = response.body()
                     body?.use { responseBody ->
                         val source = responseBody.source()
-                        val buffer = source.buffer()
+                        val bufferedReader = BufferedReader(responseBody.charStream())
+                        var index = 0
                         while (true) {
-                            val line = buffer.readUtf8Line() ?: break
+                            val line = bufferedReader.readLine() ?: break
                             if (line.isBlank()) continue
                             if (line.startsWith("data: ")) {
                                 val json = line.removePrefix("data: ").trim()
@@ -70,7 +73,12 @@ class NetworkUtils @Inject constructor(val dispatcher: CoroutineDispatcher) {
 
                                 // 解析并回调
                                 chunkParser(json)?.let { parsedChunk ->
-                                    onChunkReceived(parsedChunk)
+                                    if (index == 0) {
+                                        onStart(parsedChunk)
+                                    } else {
+                                        onChunkReceived(parsedChunk)
+                                    }
+                                    index++
                                 }
                             }
                         }

@@ -4,6 +4,7 @@ import androidx.core.content.ContextCompat
 import com.brins.lib_base.R
 import com.brins.lib_base.config.GPT_MESSAGE_KEY
 import com.brins.lib_base.config.ROLE_USER
+import com.brins.lib_base.config.STREAM_MESSAGE_KEY
 import com.brins.lib_base.model.GPTChatResponse
 import com.brins.lib_base.model.GPTMessage
 import com.brins.lib_base.model.image.GPTImageResponse
@@ -71,6 +72,20 @@ fun GPTChatResponse.toMessage(message: Message): Message {
     extraData.putAll(message.extraData)
     return Message.Builder().withId(id).withCid(message.cid)
         .withText(choice[0].message?.content ?: "").withExtraData(extraData).build()
+}
+
+fun GPTChatResponse.toStreamMessage(message: Message): Message {
+    val id = this.id
+    val model = this.model
+    val choice = this.choices
+    val extraData: MutableMap<String, Any> = mutableMapOf(GPT_MESSAGE_KEY to true, STREAM_MESSAGE_KEY to true)
+    extraData.putAll(message.extraData)
+    if (id.isNotEmpty()) {
+        return Message.Builder().withId(id).withCid(message.cid)
+            .withText(if(choice[0].delta?.content?.isEmpty() == true) "请稍后" else choice[0].delta?.content?:"" ).withExtraData(extraData).build()
+    }
+    return Message.Builder().withCid(message.cid)
+        .withText(if(choice[0].delta?.content?.isEmpty() == true) "请稍后" else choice[0].delta?.content?:"").withExtraData(extraData).build()
 }
 
 fun GPTImageResponse.toMessage(message: Message): Message {

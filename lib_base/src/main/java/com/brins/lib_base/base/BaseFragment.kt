@@ -80,5 +80,7 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout) {
         }
     }
 
+    open fun setupObserver() {}
+
 
 }

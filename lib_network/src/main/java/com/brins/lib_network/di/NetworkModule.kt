@@ -2,6 +2,7 @@ package com.brins.lib_network.di
 
 import com.brins.lib_base.model.adapter.GPTContentJsonAdapterFactory
 import com.brins.lib_network.interceptor.HttpLoggerInterceptor
+import com.brins.lib_network.interceptor.MockInterceptor
 import com.brins.lib_network.interceptor.RequestHeaderInterceptor
 import com.brins.lib_network.service.IChatGPTService
 import com.brins.lib_network.service.IDeepSeekService
@@ -45,6 +46,7 @@ internal object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(RequestHeaderInterceptor())
             .addInterceptor(HttpLoggerInterceptor())
+            .addInterceptor(MockInterceptor())
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)

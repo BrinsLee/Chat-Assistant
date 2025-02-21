@@ -4,7 +4,7 @@ import com.brins.lib_base.config.GPT_MESSAGE_KEY
 import com.brins.lib_base.config.chatGPTUser
 import com.brins.lib_base.model.GPTChatRequest
 import com.brins.lib_base.model.GPTChatResponse
-import com.brins.lib_base.model.audio.GPTTextToSpeechRequest
+import com.brins.lib_base.model.emptyGPTChatResponse
 import com.brins.lib_base.model.vision.GPTChatRequestVision
 import com.brins.lib_network.service.IChatGPTService
 import com.brins.lib_network.utils.NetworkUtils
@@ -16,7 +16,6 @@ import javax.inject.Inject
 import io.getstream.result.call.Call
 import io.getstream.result.onErrorSuspend
 import io.getstream.result.onSuccessSuspend
-import okhttp3.ResponseBody
 import java.io.IOException
 import java.util.UUID
 
@@ -64,14 +63,18 @@ class GPTMessageRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun createCompletionStream(gptChatRequest: GPTChatRequest,
-        onChunkReceived: (content: String) -> Unit,
+    override suspend fun createCompletionStream(
+        gptChatRequest: GPTChatRequest,
+        onStart: suspend (content: GPTChatResponse) -> Unit,
+        onChunkReceived: (content: GPTChatResponse) -> Unit,
         onComplete: () -> Unit,
-        onError: (error: IOException) -> Unit) {
-        networkUtils.safeStreamApiCall<String>(
+        onError: (error: IOException) -> Unit
+    ) {
+        networkUtils.safeStreamApiCall<GPTChatResponse>(
             apiCall = {
                 chatGptService.createCompletionStream(gptChatRequest)
             },
+            onStart = onStart,
             onChunkReceived = { chunk ->
                 onChunkReceived(chunk)
             },
@@ -80,9 +83,10 @@ class GPTMessageRepositoryImpl @Inject constructor(
             chunkParser = { json ->
                 val response = adapter.fromJson(json)
                 if (response == null || response.choices.isEmpty()) {
-                    ""
+                    emptyGPTChatResponse()
                 } else {
-                    val stringBuffer = StringBuffer()
+                    response
+                    /*val stringBuffer = StringBuffer()
                     for (choice in response.choices) {
                         if (choice.finishreason != "stop") {
                             if (choice.delta?.content != null) {
@@ -90,7 +94,7 @@ class GPTMessageRepositoryImpl @Inject constructor(
                             }
                         }
                     }
-                    stringBuffer.toString()
+                    stringBuffer.toString()*/
                 }
             }
         )
@@ -164,5 +168,7 @@ class GPTMessageRepositoryImpl @Inject constructor(
         return channelClient.sendMessage(realSendMessage)
     }
 
-
+    override fun updateStreamMessage(message: Message): Call<Message> {
+        return chatClient.updateMessage(message)
+    }
 }

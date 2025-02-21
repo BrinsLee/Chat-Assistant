@@ -15,6 +15,8 @@ const val IMAGE_CHANNEL_NAME_PREFIX = "DALL•E"
 
 const val GPT_MESSAGE_KEY = "ChatGpt"
 
+const val STREAM_MESSAGE_KEY = "streamMsg"
+
 /**
  * GPT Role
  */

@@ -6,7 +6,9 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.brins.gpt.R
 import com.brins.gpt.databinding.FragmentChatMessageBinding
@@ -75,7 +77,20 @@ open class BaseChatFragment : BaseSenderFragment(R.layout.fragment_chat_message)
             mBinding.root.postDelayed({
                 setupMessageList()
                 observerStateAndEvents()
+                setupObserver()
             }, 500)
+        }
+    }
+
+    override fun setupObserver() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                messageSenderViewModel.streamMessage.collect { message ->
+//                    mBinding.messageListView.scrollToBottom()
+                    Log.d("lpl", "updateMessage: ${message.text}")
+                    mBinding.messageListView.updateMessage(message)
+                }
+            }
         }
     }
 

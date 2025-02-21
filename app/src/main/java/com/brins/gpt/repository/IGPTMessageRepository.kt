@@ -2,12 +2,10 @@ package com.brins.gpt.repository
 
 import com.brins.lib_base.model.GPTChatRequest
 import com.brins.lib_base.model.GPTChatResponse
-import com.brins.lib_base.model.audio.GPTTextToSpeechRequest
 import com.brins.lib_base.model.vision.GPTChatRequestVision
 import io.getstream.chat.android.models.Channel
 import io.getstream.chat.android.models.Message
 import io.getstream.result.call.Call
-import okhttp3.ResponseBody
 import java.io.IOException
 
 interface IGPTMessageRepository {
@@ -24,7 +22,9 @@ interface IGPTMessageRepository {
     /**
      * 与gpt创建会话，流式
      */
-    suspend fun createCompletionStream(gptChatRequest: GPTChatRequest, onChunkReceived: (content: String) -> Unit,
+    suspend fun createCompletionStream(gptChatRequest: GPTChatRequest,
+        onStart: suspend (content: GPTChatResponse) -> Unit,
+        onChunkReceived: (content: GPTChatResponse) -> Unit,
         onComplete: () -> Unit,
         onError: (error: IOException) -> Unit)
 
@@ -48,6 +48,10 @@ interface IGPTMessageRepository {
      */
     suspend fun sendStreamMessage(message: Message): Call<Message>
 
+    /**
+     * 更新stream消息
+     */
+    fun updateStreamMessage(message: Message): Call<Message>
 
 
 }

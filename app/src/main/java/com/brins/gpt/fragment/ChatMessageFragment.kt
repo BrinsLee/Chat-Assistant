@@ -2,14 +2,12 @@ package com.brins.gpt.fragment
 
 import android.os.Bundle
 import android.view.View
-import com.brins.gpt.R
 import com.brins.gpt.databinding.CommonEmptyMessageViewBinding
 import com.brins.gpt.widget.GPT3MessageComposerLeadingContent
 import com.brins.gpt.widget.GPT3MessageComposerTrailingContent
 import com.brins.gpt.widget.GPT4MessageComposerLeadingContent
 import com.brins.gpt.widget.GPT4MessageComposerTrailingContent
 import com.brins.lib_base.extensions.getChannelIcon
-import com.brins.lib_base.extensions.isChatGPTChannel
 import dagger.hilt.android.AndroidEntryPoint
 import io.getstream.chat.android.ui.common.state.messages.MessageMode
 import io.getstream.chat.android.ui.common.state.messages.Reply
