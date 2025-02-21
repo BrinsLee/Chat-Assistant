@@ -2,6 +2,7 @@ package com.brins.lib_network.utils
 
 import dagger.hilt.InstallIn
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import retrofit2.HttpException
@@ -75,8 +76,10 @@ class NetworkUtils @Inject constructor(val dispatcher: CoroutineDispatcher) {
                                 chunkParser(json)?.let { parsedChunk ->
                                     if (index == 0) {
                                         onStart(parsedChunk)
+                                        delay(800)
                                     } else {
                                         onChunkReceived(parsedChunk)
+                                        delay(100)
                                     }
                                     index++
                                 }

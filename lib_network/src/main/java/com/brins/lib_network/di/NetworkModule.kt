@@ -46,7 +46,6 @@ internal object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(RequestHeaderInterceptor())
             .addInterceptor(HttpLoggerInterceptor())
-            .addInterceptor(MockInterceptor())
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)
